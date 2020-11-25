@@ -86,12 +86,26 @@
 
 <script>
 import { Tab, Tabs } from "vant";
+import api from "../../api/user";
 export default {
     data() {
         return {
             active: 0,
             tabs: ["全部", "收入", "支出"],
         };
+    },
+    created() {
+        this.init();
+    },
+    methods: {
+        async init() {
+            let res = await api.getMemberSourceList({
+                memberId: this.$store.state.user.userId,
+                pageNo: 1,
+                pageSize: 10,
+                sourceType: 1,
+            });
+        },
     },
     components: {
         Tab,

@@ -75,10 +75,9 @@ export default {
             let { orderId } = this.$route.query || false;
             //如果有orderId 表示是进来选择地址的 点击后直接获取id  然后返回订单页面
             if (!orderId) return;
-            // this.$router.replace({
-            //     path: "/confirmorder",
-            //     query: { address: info.id, orderId },
-            // });
+            this.$router.replace(
+                `/order/confirm/${orderId}?addressId=${info.id}`
+            );
         },
         async getAddressList() {
             //获取用户地址 筛默认地址

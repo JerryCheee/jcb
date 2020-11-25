@@ -17,17 +17,24 @@
                     style="flex: 1; font-size: 0.215rem"
                     color="#1a1a1a"
                     background="#ffffff"
-                >{{ notice }}</NoticeBar>
+                    >{{ notice }}</NoticeBar
+                >
             </div>
 
             <!-- 商品分类 -->
             <swipe class="classify" indicator-color="white">
                 <swipe-item v-for="(item, index) in classify_list" :key="index">
                     <div class="class-list">
-                        <div class="classify-item" v-for="(v, i) in item" :key="i">
+                        <router-link
+                            tag="div"
+                            :to="`/classify?index=${i}`"
+                            class="classify-item"
+                            v-for="(v, i) in item"
+                            :key="i"
+                        >
                             <img :src="v.icon" alt />
                             <div>{{ v.name }}</div>
-                        </div>
+                        </router-link>
                     </div>
                 </swipe-item>
             </swipe>
@@ -50,7 +57,11 @@
                         </count-down>
                     </div>
                 </div>
-                <router-link tag="div" to="/purchase/preferential" class="right">
+                <router-link
+                    tag="div"
+                    to="/purchase/preferential"
+                    class="right"
+                >
                     更多
                     <i class="iconfont icongengduo"></i>
                 </router-link>
@@ -82,7 +93,11 @@
                     <div class="title">大牌驾到</div>
                     <div class="desc">福利天天送</div>
                 </div>
-                <router-link tag="div" to="/purchase/brand-arrives" class="right">
+                <router-link
+                    tag="div"
+                    to="/purchase/brand-arrives"
+                    class="right"
+                >
                     更多
                     <i class="iconfont icongengduo"></i>
                 </router-link>
@@ -122,22 +137,28 @@
                 <div class="title">品牌好物</div>
                 <div class="desc">精选产品·精工打造</div>
                 <div class="list">
-                    <router-link tag="div" class="item-row" to="/goods/detail?id=1">
+                    <router-link
+                        tag="div"
+                        class="item-row"
+                        to="/goods/detail?id=1"
+                    >
                         <img src="../../assets/img/分类-商品图.png" alt />
                         <div class="info">
                             <div class="name e2">博世 电动工 螺 丝刀</div>
-                            <div class="price">
-                                <span>￥</span>499
-                            </div>
+                            <div class="price"><span>￥</span>499</div>
                         </div>
                     </router-link>
-                    <router-link tag="div" class="item-row" to="/goods/detail?id=1">
+                    <router-link
+                        tag="div"
+                        class="item-row"
+                        to="/goods/detail?id=1"
+                    >
                         <img src="../../assets/img/分类-商品图.png" alt />
                         <div class="info">
-                            <div class="name e2">博世 电动工 螺 丝刀世 电动工 螺 丝刀</div>
-                            <div class="price">
-                                <span>￥</span>499
+                            <div class="name e2">
+                                博世 电动工 螺 丝刀世 电动工 螺 丝刀
                             </div>
+                            <div class="price"><span>￥</span>499</div>
                         </div>
                     </router-link>
                 </div>
@@ -152,9 +173,7 @@
                         <img src="../../assets/img/分类-商品图.png" alt />
                         <div class="info">
                             <div class="name e1">电动螺丝刀</div>
-                            <div class="price">
-                                <span>￥</span>499
-                            </div>
+                            <div class="price"><span>￥</span>499</div>
                         </div>
                     </router-link>
                 </div>
@@ -174,7 +193,9 @@
                     >
                         <img src="../../assets/img/分类-商品图.png" alt />
                         <div class="info">
-                            <div class="name e2">铁皮打包带专用大力剪刀剪 铁皮带剪刀 钢带剪</div>
+                            <div class="name e2">
+                                铁皮打包带专用大力剪刀剪 铁皮带剪刀 钢带剪
+                            </div>
                             <div class="price">
                                 <span class="new">￥150</span>
                                 <span class="old">￥199</span>
@@ -233,7 +254,7 @@ import {
     Tabs,
     Toast,
     List,
-    NoticeBar
+    NoticeBar,
 } from "vant";
 import myFooter from "../../components/footer";
 import searchTop from "../../components/search-top";
@@ -252,12 +273,12 @@ export default {
             timeData: {
                 hours: 0,
                 minutes: 0,
-                seconds: 0
+                seconds: 0,
             },
             active: 1,
             reconBrandList: [],
             goodsParams: { pageNo: 1, pageSize: 10, type: 2 },
-            goodsList: []
+            goodsList: [],
         };
     },
     created() {
@@ -272,23 +293,23 @@ export default {
             this.finished = false;
             this.goodsParams.type = v + 1;
             this.goodsParams.pageNo = 1;
-        }
+        },
     },
     methods: {
         async getBanner() {
             let res = await indexApi.getBanner({
-                field: 6,
+                field: 1,
                 source: 1,
-                type: 1
+                type: 1,
             });
             this.banners = res.result || [];
         },
         async getNotice() {
             let res = await indexApi.getNotice({
                 source: 1,
-                type: 1
+                type: 1,
             });
-            this.notice = (res.result || []).map(v => v.content).join("   ");
+            this.notice = (res.result || []).map((v) => v.content).join("   ");
         },
         async getAllClassifyList() {
             let res = await api.getAllList();
@@ -325,8 +346,8 @@ export default {
                     return;
                 }
                 this.goodsParams.pageNo++;
-            }, 500);
-        }
+            }, 1000);
+        },
     },
     components: {
         Swipe,
@@ -338,8 +359,8 @@ export default {
         myFooter,
         GoodsList,
         List,
-        NoticeBar
-    }
+        NoticeBar,
+    },
 };
 </script>
 

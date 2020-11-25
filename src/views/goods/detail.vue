@@ -1,7 +1,11 @@
 <template>
     <div class="goods-detail-wrap" indicator-color="#c5c5c5">
         <swipe autoplay="5000" class="swipe">
-            <swipe-item class="swipe-item" v-for="(item, i) in pageInfo.pics.split(',')" :key="i">
+            <swipe-item
+                class="swipe-item"
+                v-for="(item, i) in pageInfo.pics.split(',')"
+                :key="i"
+            >
                 <img :src="item" alt />
             </swipe-item>
         </swipe>
@@ -77,13 +81,18 @@
         <div class="plr" v-if="pageInfo.comments.total">
             <div class="comment-wrap">
                 <div class="top row sb ac">
-                    <span class="total">用户评价({{ pageInfo.comments.total }})</span>
+                    <span class="total"
+                        >用户评价({{ pageInfo.comments.total }})</span
+                    >
                     <router-link to="/goods/evaluate" tag="span" class="go-all">
                         全部评价
                         <i class="iconfont icongengduo"></i>
                     </router-link>
                 </div>
-                <evaluate-card :hasBar="false" :info="pageInfo.comments.records[0] || {}"></evaluate-card>
+                <evaluate-card
+                    :hasBar="false"
+                    :info="pageInfo.comments.records[0] || {}"
+                ></evaluate-card>
             </div>
         </div>
 
@@ -92,11 +101,7 @@
             class="detail-img column plr"
             style="margin-bottom: 0.23rem"
             v-html="pageInfo.productSubVo.detail"
-        >
-            <!-- <img src="../../assets/img/商品详情图.png" alt="" />
-            <img src="../../assets/img/商品详情图2.png" alt="" />
-            <img src="../../assets/img/商品详情图3.png" alt="" />-->
-        </div>
+        ></div>
 
         <!-- 权利说明 -->
         <div class="plr" style="margin-bottom: 0.23rem">
@@ -115,8 +120,12 @@
                 <span class="cus">客服</span>
             </div>
             <div class="row ac">
-                <div class="btn add-shopcart" @click="showSpecPop('add')">加入购物车</div>
-                <div class="btn buy-now" @click="showSpecPop('buy')">立即购买</div>
+                <div class="btn add-shopcart" @click="showSpecPop('add')">
+                    加入购物车
+                </div>
+                <div class="btn buy-now" @click="showSpecPop('buy')">
+                    立即购买
+                </div>
             </div>
         </div>
 
@@ -146,14 +155,21 @@
                         <div class="take took row ac jc">已领取</div>
                     </div>
                 </div>
-                <div class="pop-close-btn position" @click="pops.coupon = false">保存</div>
+                <div
+                    class="pop-close-btn position"
+                    @click="pops.coupon = false"
+                >
+                    保存
+                </div>
             </div>
         </action-sheet>
         <action-sheet v-model="pops.serverInfo" title="服务说明">
             <div class="pop-content server-content">
                 <div>
                     <span class="s-title">退货包运费</span>
-                    <p>订单发货后90天内如果申请退货退款或换货，平台将免除退货运费</p>
+                    <p>
+                        订单发货后90天内如果申请退货退款或换货，平台将免除退货运费
+                    </p>
                 </div>
                 <div>
                     <span class="s-title">极速退款</span>
@@ -163,7 +179,12 @@
                     <span class="s-title">7天无理由退款</span>
                     <p>满足相应条件时，消费者可申请7天无理由退</p>
                 </div>
-                <div class="pop-close-btn position" @click="pops.serverInfo = false">关闭</div>
+                <div
+                    class="pop-close-btn position"
+                    @click="pops.serverInfo = false"
+                >
+                    关闭
+                </div>
             </div>
         </action-sheet>
         <action-sheet v-model="pops.goodsParams" title="产品参数">
@@ -178,13 +199,18 @@
                         <span>{{ pageInfo.productParameter[item] }}</span>
                     </div>
                 </div>
-                <div class="pop-close-btn position" @click="pops.goodsParams = false">关闭</div>
+                <div
+                    class="pop-close-btn position"
+                    @click="pops.goodsParams = false"
+                >
+                    关闭
+                </div>
             </div>
         </action-sheet>
 
         <!-- 添加购物车 立即购买弹框 （这里用了看不见的字符 ^ - ^）-->
-        <action-sheet v-model="pops.specs">
-            <div class="pop-content tabbar-pop shopcart-content">
+        <action-sheet v-model="pops.specs" :round="false">
+            <div class="shopcart-content column">
                 <!-- 顶部信息栏 -->
                 <div class="top row">
                     <img :src="sku_obj.preview" alt />
@@ -192,35 +218,63 @@
                         <div class="row price-wrap">
                             <span class="symbol">￥</span>
                             <span class="price">
-                                {{
-                                sku_obj.purchasePrice
-                                }}
+                                {{ sku_obj.purchasePrice }}
                             </span>
                         </div>
-                        <span class="stock">库存：{{ sku_obj.stock || 0 }}</span>
-                        <span class="select-params" v-if="sku_list.length > 0">已选：{{ sku_selected }}</span>
-                        <span class="select-params" v-else>请选择 颜色 规格</span>
+                        <span class="stock"
+                            >库存：{{ sku_obj.stock || 0 }}</span
+                        >
+                        <span class="select-params" v-if="sku_list.length > 0"
+                            >已选：{{ sku_selected }}</span
+                        >
+                        <span class="select-params" v-else
+                            >请选择 颜色 规格</span
+                        >
                     </div>
                 </div>
-                <!-- 选择规格栏 -->
-                <div class="spec-wrap" v-for="(item, i) in pageInfo.propertyBoots" :key="i">
-                    <span class="title">{{ item.propertyName }}</span>
-                    <div class="row" style="margin-top: 0.17rem">
-                        <div
-                            class="spec-item"
-                            :class="{ active: sku_active_id[i] == idx }"
-                            v-for="(v, idx) in item.options"
-                            :key="v.propertyId"
-                            @click="selectSku(v.value, idx, i)"
-                        >{{ v.value }}</div>
+                <div style="flex: 1; overflow: auto; padding-bottom: 1rem">
+                    <!-- 选择规格栏 -->
+                    <div
+                        class="spec-wrap"
+                        v-for="(item, i) in pageInfo.propertyBoots"
+                        :key="i"
+                    >
+                        <span class="title">{{ item.propertyName }}</span>
+                        <div class="row" style="margin-top: 0.17rem">
+                            <div
+                                class="spec-item"
+                                :class="{ active: sku_active_id[i] == idx }"
+                                v-for="(v, idx) in item.options"
+                                :key="v.propertyId"
+                                @click="selectSku(v.value, idx, i)"
+                            >
+                                {{ v.value }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spec-wrap row sb" style="margin-top: 0.45rem">
+                        <span class="title">数量</span>
+                        <div class="right">
+                            <span>(起拍数量：{{ pageInfo.clap }})</span>
+                            <stepper
+                                v-model="num"
+                                :max="sku_obj.stock"
+                                :min="pageInfo.clap"
+                            />
+                        </div>
                     </div>
                 </div>
-                <div class="spec-wrap row sb" style="margin-top: 0.45rem">
-                    <span class="title">数量</span>
-                    <stepper v-model="num" :max="sku_obj.stock" />
+                <div class="useless" style="height: 0.8rem"></div>
+                <div
+                    class="confirm-btn row ac jc"
+                    @click="addShopCart"
+                    v-if="pop_type == 'add'"
+                >
+                    加入购物车
                 </div>
-                <div class="confirm-btn row ac jc" @click="addShopCart" v-if="pop_type=='add'">加入购物车</div>
-                <div class="confirm-btn row ac jc" @click="buyNow" v-else>确定</div>
+                <div class="confirm-btn row ac jc" @click="buyNow" v-else>
+                    确定
+                </div>
             </div>
         </action-sheet>
     </div>
@@ -231,6 +285,7 @@ import { Swipe, SwipeItem, ActionSheet, Stepper, Toast } from "vant";
 import RecommendGoods from "../../components/recommend-goods";
 import EvaluateCard from "../../components/evaluate-card";
 import api from "../../api/product";
+import orderApi from "../../api/order";
 export default {
     data() {
         return {
@@ -240,27 +295,27 @@ export default {
                 serverInfo: false,
                 coupon: false,
                 goodsParams: false,
-                specs: false
+                specs: false,
             },
             num: 1, //商品数量
             pageInfo: {
                 pics: "",
                 comments: { records: [] },
                 productSubVo: {},
-                productParameter: {}
+                productParameter: {},
             }, //详情
             takeDay: [0, 0, 0], //预售发货时间
             sku_list: [], //选购规格的value 动态绑定
             sku_active_id: [],
             sku_obj: {}, // 筛选出来的obj 展示用
             sku_selected: "", //已选中的规格
-            pop_type: "add" //判断是添加购物车还是购买  add购物车  buy购买
+            pop_type: "add", //判断是添加购物车还是购买  add购物车  buy购买
         };
     },
     watch: {
         $route(to) {
             this.getDetail();
-        }
+        },
     },
     created() {
         this.getDetail();
@@ -270,7 +325,7 @@ export default {
             //获取商品详情
             let params = {
                 memberId: this.$store.state.user.userId,
-                productId: this.$route.query.id
+                productId: this.$route.query.id,
             };
             let res = await api.getGoodsDetail(params);
             if (!res.success) return Toast(res.message);
@@ -279,6 +334,7 @@ export default {
             this.takeDay = (res.result.deliveryDate || "").split("-");
             // 给规格展示一个默认值
             this.sku_obj = this.pageInfo.productSkuVos[0];
+            this.num = this.pageInfo.clap;
             window.scroll(0, 0);
         },
         async collectIt() {
@@ -305,8 +361,8 @@ export default {
             }
 
             let index = map.findIndex((v, i) => {
-                let rules = v.propertyList.map(v => v.value); //数组
-                return rules.every(v => this.sku_list.includes(v));
+                let rules = v.propertyList.map((v) => v.value); //数组
+                return rules.every((v) => this.sku_list.includes(v));
             });
 
             if (index != -1) {
@@ -314,8 +370,8 @@ export default {
                 this.sku_obj = map[index];
             }
 
-            this.sku_selected = this.sku_list.join("、");
-            let flag = this.sku_list.every(v => !v);
+            this.sku_selected = this.sku_list.filter((a) => a).join("、");
+            let flag = this.sku_list.every((v) => !v);
             if (flag) this.sku_list.length = 0;
             //  console.log(map)
             this.$forceUpdate(); //强制更新组件
@@ -326,57 +382,55 @@ export default {
         },
         async addShopCart() {
             if (!this.valid()) {
-                this.showToast("请选中所有类别！");
+                Toast("请选中所有类别！");
                 return;
             }
             let data = {
-                buyStores: this.pageInfo.storeHotProductVo.storeId,
+                buyStores: this.pageInfo.supplierId,
                 count: this.num,
                 productId: this.$route.query.id,
-                skuId: this.sku_obj.id
+                skuId: this.sku_obj.id,
+                type: 2,
             };
             let res = await api.addShopcart(data);
             if (res.success) {
-                this.showToast("添加购物车成功！");
+                Toast("添加购物车成功！");
                 this.pops.specs = false;
             } else {
-                this.showToast(res.message);
+                Toast(res.message);
             }
         },
         async buyNow() {
-            //console.log(this.sku_obj)
-            let data = {
-                productList: [
-                    {
-                        productId: this.$route.query.id,
-                        productNumber: 1,
-                        productPrice: this.sku_obj.price,
-                        productSkuId: this.sku_obj.id,
-                        shelveId: "1324301545862070274",
-                        shelveType: 2
-                    }
-                ],
-                sourceType: 1,
-                sourceId: "1308242941815496705"
-            };
-            let res = await api.createOrder(data);
-            if (res.success) {
-                this.$router.push({
-                    name: "confirmorder",
-                    query: { orderId: res.result }
-                });
-            } else {
-                this.showToast("获取订单失败！");
+            if (!this.valid()) {
+                Toast("请选中所有类别！");
+                return;
             }
-            //console.log(res)
+            let data = [
+                {
+                    productList: [
+                        {
+                            productId: this.$route.query.id,
+                            number: this.num,
+                            skuPrice: this.sku_obj.purchasePrice,
+                            skuId: this.sku_obj.id,
+                            templateId: this.pageInfo.templateId,
+                        },
+                    ],
+                    sourceType: 2,
+                    sourceId: this.$store.state.user.storeId,
+                },
+            ];
+            let res = await orderApi.addStoreOrder(data);
+            if (!res.success) return Toast(res.message);
+            this.$router.push({ path: "/order/confirm/" + res.result });
         },
         valid() {
             //验证是否选择完
             let length = this.pageInfo.propertyBoots.length;
             if (this.sku_list.length == 0 || this.sku_list.length < length)
                 return false;
-            return !this.sku_list.some(v => !v);
-        }
+            return !this.sku_list.some((v) => !v);
+        },
     },
     components: {
         Swipe,
@@ -384,8 +438,8 @@ export default {
         ActionSheet,
         Stepper,
         RecommendGoods,
-        EvaluateCard
-    }
+        EvaluateCard,
+    },
 };
 </script>
 
@@ -668,10 +722,15 @@ export default {
     }
 }
 .shopcart-content {
+    height: 80vh;
     padding-top: 0.3rem;
+    padding: 0 0.27rem;
     box-sizing: border-box;
     position: relative;
     .top {
+        height: 1.41rem;
+        margin-top: 0.2rem;
+        margin-bottom: 0.3rem;
         img {
             width: 1.41rem;
             height: 1.41rem;
@@ -706,6 +765,14 @@ export default {
         .title {
             font-size: 0.24rem;
             color: #1a1a1a;
+        }
+        .right {
+            display: flex;
+            align-items: center;
+            > span {
+                font-size: 0.2rem;
+                margin-right: 0.2rem;
+            }
         }
         .spec-item {
             padding: 0.11rem 0.31rem;

@@ -31,7 +31,9 @@
                     v-for="(item, i) in second"
                     :key="i"
                     @click="changeMenu(i)"
-                >{{ item.name }}</div>
+                >
+                    {{ item.name }}
+                </div>
             </div>
             <!-- 文字筛选 -->
             <div class="right-content" ref="rightBox">
@@ -41,7 +43,8 @@
                         v-for="(item, i) in third"
                         :key="i"
                         @click="changeThird(i)"
-                    >{{ item.name }}</span>
+                        >{{ item.name }}</span
+                    >
                 </div>
 
                 <!-- 条件筛选 -->
@@ -51,18 +54,23 @@
                             <span
                                 :class="{ 'active-text': conditionIdx == 0 }"
                                 @click="changeCondition(0)"
-                            >综合</span>
+                                >综合</span
+                            >
                             <span
                                 :class="{ 'active-text': conditionIdx == 1 }"
                                 @click="changeCondition(1)"
-                            >销量</span>
+                                >销量</span
+                            >
                             <span
                                 class="row ac"
                                 :class="{ 'active-text': conditionIdx == 2 }"
                                 @click="changeCondition(2)"
                             >
                                 <span>价格</span>
-                                <preparation :status.sync="salesCondition" ref="prepa"></preparation>
+                                <preparation
+                                    :status.sync="salesCondition"
+                                    ref="prepa"
+                                ></preparation>
                             </span>
                         </div>
                         <div class="row right" @click="isPop = true">
@@ -79,23 +87,26 @@
                         <router-link
                             tag="div"
                             class="goods-card row"
-                            v-for="(item,index) in goodsList"
+                            v-for="(item, index) in goodsList"
                             :key="index"
-                            :to="'/goods/detail?id='+item.productId"
+                            :to="'/goods/detail?id=' + item.productId"
                         >
                             <img :src="item.pic" alt />
                             <div class="right-info column sb">
-                                <span class="name e2">{{item.productName}}</span>
+                                <span class="name e2">{{
+                                    item.productName
+                                }}</span>
                                 <div class="price row">
-                                    <div class="now">￥{{item.purchasePrice}}</div>
-                                    <div
-                                        class="old"
-                                        v-if="item.advicePrice"
-                                    >￥{{item.advicePrice || 0}}</div>
+                                    <div class="now">
+                                        ￥{{ item.purchasePrice }}
+                                    </div>
+                                    <div class="old" v-if="item.advicePrice">
+                                        ￥{{ item.advicePrice || 0 }}
+                                    </div>
                                 </div>
                             </div>
                         </router-link>
-                        <div if="!iphoneX" style="height:0.82rem"></div>
+                        <div if="!iphoneX" style="height: 0.82rem"></div>
                     </div>
                 </div>
             </div>
@@ -146,9 +157,9 @@ export default {
             searchParams: {
                 pageNo: 1,
                 pageSize: 100,
-                type: -1
+                type: -1,
             },
-            goodsList: []
+            goodsList: [],
         };
     },
     async created() {
@@ -239,7 +250,7 @@ export default {
         async getBrandRec() {
             //获取品牌
             let res = await api.getBrands();
-            Object.values(res.result).map(v => {
+            Object.values(res.result).map((v) => {
                 this.goodsBrands.push(...v);
             });
         },
@@ -258,7 +269,7 @@ export default {
             this.searchParams.brandId = value[1].id;
             this.goodsList = [];
             this.getGoodList();
-        }
+        },
     },
     mounted() {
         this.updateDynamicHeight();
@@ -269,15 +280,15 @@ export default {
         },
         isThrid(n) {
             setTimeout(this.updateDynamicHeight, 0);
-        }
+        },
     },
     components: {
         myFooter,
         preparation,
         popUp,
         preparationInner,
-        List
-    }
+        List,
+    },
 };
 </script>
 
@@ -407,6 +418,7 @@ export default {
                 }
                 .right-info {
                     margin-left: 0.17rem;
+                    flex: 1;
                     .name {
                         color: #1a1a1a;
                         font-size: 0.24rem;

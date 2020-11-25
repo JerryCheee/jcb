@@ -11,6 +11,6 @@ export default {
     getStoreInfo: data => req.post('/store/details', data),
     getStoreCenter: storeId => req.get('/store/getStoreCenter?storeId=' + storeId),
     geographic: params => req.get('/geographic/options', { params }),
-    getCollectList: params => req.post('/memberSubApi/listCollectCommodity', params)
-
+    getCollectList: params => req.post('/memberSubApi/listCollectCommodity', params),
+    getMemberSourceList: (params) => req.get('/popularize/memberSourceList', { params }),
 }

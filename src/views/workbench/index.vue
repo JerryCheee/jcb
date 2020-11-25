@@ -5,7 +5,10 @@
             <div class="right">
                 <i class="iconfont iconsaoyisao"></i>
                 <i class="iconfont iconxiaoxi"></i>
-                <router-link to="/workbench/info" class="iconfont iconshezhi"></router-link>
+                <router-link
+                    to="/workbench/info"
+                    class="iconfont iconshezhi"
+                ></router-link>
             </div>
             <div class="info row sb">
                 <div class="row">
@@ -38,32 +41,56 @@
             <div class="common-card">
                 <span class="title">
                     <span class="title">店铺交易订单</span>
-                    <router-link tag="span" to="/workbench/shop-orders" class="right">
+                    <router-link
+                        tag="span"
+                        to="/workbench/shop-orders"
+                        class="right"
+                    >
                         全部订单
                         <i class="iconfont icongengduo"></i>
                     </router-link>
                 </span>
                 <div class="common-wrap">
-                    <router-link tag="div" to="/workbench/shop-orders/1" class="common-item">
+                    <router-link
+                        tag="div"
+                        to="/workbench/shop-orders/1"
+                        class="common-item"
+                    >
                         <i class="iconfont icondaizhifu yellow"></i>
                         <span>待支付</span>
                     </router-link>
-                    <router-link tag="div" to="/workbench/shop-orders/2" class="common-item">
+                    <router-link
+                        tag="div"
+                        to="/workbench/shop-orders/2"
+                        class="common-item"
+                    >
                         <i class="iconfont icondaishouhuo blue"></i>
                         <span>待收货</span>
                     </router-link>
-                    <router-link tag="div" to="/workbench/shop-orders/3" class="common-item">
+                    <router-link
+                        tag="div"
+                        to="/workbench/shop-orders/3"
+                        class="common-item"
+                    >
                         <i class="iconfont iconyiwancheng green"></i>
                         <span>已完成</span>
                     </router-link>
-                    <router-link tag="div" to="/workbench/shop-orders/4" class="common-item">
+                    <router-link
+                        tag="div"
+                        to="/workbench/shop-orders/4"
+                        class="common-item"
+                    >
                         <i class="iconfont icontuihuoshouhou red"></i>
                         <span>退货售后</span>
                     </router-link>
                 </div>
             </div>
             <!-- 推广中心 -->
-            <router-link tag="div" to="/workbench/popularize" class="common-card">
+            <router-link
+                tag="div"
+                to="/workbench/popularize"
+                class="common-card"
+            >
                 <span class="title">推广中心</span>
                 <div class="common-wrap">
                     <div class="info-item">
@@ -84,33 +111,47 @@
             <div class="common-card">
                 <span class="title">店铺管理</span>
                 <div class="common-wrap">
-                    <router-link to="/workbench/goods" tag="div" class="common-item">
-                        <i class="iconfont iconshangpinguanli green"></i>
-                        <span>商品管理</span>
-                    </router-link>
-                    <div class="common-item">
+                    <router-link tag="div" to="/order" class="common-item">
                         <i class="iconfont iconjinhuodingdan yellow"></i>
                         <span>进货订单</span>
-                    </div>
-                    <router-link to="/workbench/shop-coupons" tag="div" class="common-item">
-                        <i class="iconfont iconyouhuiquan red"></i>
-                        <span>优惠券</span>
                     </router-link>
-                    <router-link tag="div" to="/workbench/address" class="common-item">
+                    <router-link
+                        tag="div"
+                        to="/workbench/address"
+                        class="common-item"
+                    >
                         <i class="iconfont icondizhi blue"></i>
                         <span>收货地址</span>
                     </router-link>
+                    <div
+                        @click="wait"
+                        to="/workbench/goods"
+                        tag="div"
+                        class="common-item"
+                    >
+                        <i class="iconfont iconshangpinguanli green"></i>
+                        <span>商品管理</span>
+                    </div>
+                    <div
+                        @click="wait"
+                        to="/workbench/shop-coupons"
+                        tag="div"
+                        class="common-item"
+                    >
+                        <i class="iconfont iconyouhuiquan red"></i>
+                        <span>优惠券</span>
+                    </div>
                 </div>
             </div>
             <!-- 其他工具 -->
             <div class="common-card">
                 <span class="title">其他工具</span>
                 <div class="common-wrap">
-                    <router-link to="/workbench/purchase-discount" tag="div" class="common-item">
-                        <i class="iconfont iconjinhuoyouhui red"></i>
-                        <span>进货优惠</span>
-                    </router-link>
-                    <router-link tag="div" to="/workbench/collect" class="common-item">
+                    <router-link
+                        tag="div"
+                        to="/workbench/collect"
+                        class="common-item"
+                    >
                         <i class="iconfont iconguanzhu blue"></i>
                         <span>我的收藏</span>
                     </router-link>
@@ -118,9 +159,21 @@
                         <i class="iconfont iconqiehuan green"></i>
                         <span>切换买家端</span>
                     </router-link>
-                    <div class="common-item">
+                    <a
+                        class="common-item"
+                        href="https://yzf.qq.com/xv/web/static/chat/index.html?sign=37ef9b97817257902417cab84fb5e0669798bef57231e621e0439145d414695d3f39810730d2a498603a9ce6257466b3baaefd77"
+                    >
                         <i class="iconfont iconkefu yellow"></i>
                         <span>联系客服</span>
+                    </a>
+                    <div
+                        @click="wait"
+                        to="/workbench/purchase-discount"
+                        tag="div"
+                        class="common-item"
+                    >
+                        <i class="iconfont iconjinhuoyouhui red"></i>
+                        <span>进货优惠</span>
                     </div>
                 </div>
             </div>
@@ -133,12 +186,13 @@
 <script>
 import myFooter from "../../components/footer";
 import api from "../../api/user";
+import { Toast } from "vant";
 export default {
     name: "mine",
     data() {
         return {
             storeInfo: {},
-            storeId: this.$store.state.user.storeId
+            storeId: this.$store.state.user.storeId,
         };
     },
     created() {
@@ -148,11 +202,14 @@ export default {
         async getStoreCenter() {
             let res = await api.getStoreCenter(this.storeId);
             this.storeInfo = res.result || {};
-        }
+        },
+        wait() {
+            Toast("此功能暂未开放！");
+        },
     },
     components: {
-        myFooter
-    }
+        myFooter,
+    },
 };
 </script>
 

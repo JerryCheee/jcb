@@ -2,14 +2,14 @@
     <div class="shopcart-wrap">
         <empty description="暂无商品" v-if="empty"></empty>
         <div class="top-control row ac sb" v-if="!empty">
-            <span>购物车({{shopcartList.length}})</span>
-            <span v-show="mode=='buy'" @click="mode='del'">管理</span>
-            <span v-show="mode=='del'" @click="mode='buy'">完成</span>
+            <span>购物车({{ shopcartList.length }})</span>
+            <span v-show="mode == 'buy'" @click="mode = 'del'">管理</span>
+            <span v-show="mode == 'del'" @click="mode = 'buy'">完成</span>
         </div>
         <div class="shopcart-content">
             <div class="fs">
                 <shop-card
-                    v-for="(item,i) in shopcartList"
+                    v-for="(item, i) in shopcartList"
                     :key="item.storeId"
                     :info="item"
                     :ref="refs[i]"
@@ -25,21 +25,26 @@
         <!-- 购物车底部 -->
         <div class="shop-bar row sb ac">
             <div class="select-all row ac">
-                <radio-one v-model="isSelectAll" @click.native="selectAll"></radio-one>
+                <radio-one
+                    v-model="isSelectAll"
+                    @click.native="selectAll"
+                ></radio-one>
                 <span>全选</span>
             </div>
-            <div class="buy-info row ac" v-show="mode=='buy'">
+            <div class="buy-info row ac" v-show="mode == 'buy'">
                 <div class="info column">
                     <span>
                         合计:
-                        <span class="price">￥{{totalPirce}}</span>
+                        <span class="price">￥{{ totalPirce.toFixed(2) }}</span>
                     </span>
-                    <span class="total">共计{{quantity}}个商品</span>
+                    <span class="total">共计{{ quantity }}个商品</span>
                 </div>
                 <div class="btn-buy row ac jc" @click="buyNow">立即购买</div>
             </div>
-            <div class="buy-info row ac" v-show="mode=='del'">
-                <div class="btn-buy del row ac jc" @click="delShopcartGoods">删除</div>
+            <div class="buy-info row ac" v-show="mode == 'del'">
+                <div class="btn-buy del row ac jc" @click="delShopcartGoods">
+                    删除
+                </div>
             </div>
         </div>
         <my-footer></my-footer>
@@ -49,7 +54,8 @@
 <script>
 import productApi from "../../api/product";
 import api from "../../api/shopcart";
-import { Empty, Toast } from "vant";
+import orderApi from "../../api/order";
+import { Empty, Toast, Dialog } from "vant";
 import MyFooter from "../../components/footer";
 import ShopCard from "../../components/shopcart-card";
 import RecommendGoods from "../../components/recommend-goods";
@@ -68,27 +74,27 @@ export default {
             chooseData: [], //购物车选中的数据 算钱！ :(
             mode: "buy", //是购买还是删除 -> buy / del
             goodsList: [],
-            goodsParams: { type: 2 }
+            goodsParams: { type: 2 },
         };
     },
     methods: {
         async getShopcartList() {
-            let res = await api.getList({ shopType: 1 });
+            let res = await api.getList({ shopType: 2 });
             this.shopcartList = res.result;
             // res.result = []
             //给每一个卡片一个ref值
-            this.refs.push(...this.shopcartList.map(v => v.storeId));
+            this.refs.push(...this.shopcartList.map((v) => v.storeId));
             if (res.result.length == 0) this.empty = true;
             //获取购物车总商品数(仅有效商品)
             let s = [];
-            this.shopcartList.map(v =>
-                s.push(...v.productVoList.filter(s => s.state == 1))
+            this.shopcartList.map((v) =>
+                s.push(...v.productVoList.filter((s) => s.state == 1))
             );
             this.totalNum = s.length;
         },
         selectAll() {
             //全选商品
-            this.refs.forEach(v => {
+            this.refs.forEach((v) => {
                 //console.log('index -> '+this.isSelectAll)
                 this.$refs[v][0].checkAll = this.isSelectAll;
                 this.$refs[v][0].chooseAll();
@@ -102,70 +108,77 @@ export default {
         getData(obj) {
             //获取购物车的勾选数据
             let storeId = obj.storeId;
-            let index = this.chooseData.findIndex(v => v.storeId == storeId);
+            let index = this.chooseData.findIndex((v) => v.storeId == storeId);
             if (index == -1) {
                 this.chooseData.push(obj);
             } else {
                 this.chooseData[index].productVoList = obj.productVoList;
             }
             //计算总数量
-            let num = this.chooseData.map(v => v.productVoList.length);
+            let num = this.chooseData.map((v) => v.productVoList.length);
             this.quantity = num.reduce((pre, cur) => pre + cur);
             //判断是否全选了商品
             //this.totalNum == this.quantity? this.isSelectAll=true:this.isSelectAll=false
             //计算总价格
             let list = [];
-            this.chooseData.map(v => list.push(...v.productVoList));
+            this.chooseData.map((v) => list.push(...v.productVoList));
             this.totalPirce = list.reduce(
-                (pre, cur) => cur.price * cur.count + pre,
+                (pre, cur) => (cur.price * 100 * cur.count) / 100 + pre,
                 0
             );
         },
         async delShopcartGoods() {
             let list = [];
-            this.chooseData.map(v => {
+            this.chooseData.map((v) => {
                 list.push(...v.productVoList);
             });
             if (list.length == 0) {
                 Toast("请勾选需要删除的商品!");
                 return;
             }
-            let ids = list.map(v => v.cartId).join(",");
-            let res = await api.delGoods({ id: ids });
-            if (res.success) {
-                this.getShopcartList();
-            } else {
-                Toast("删除商品失败！");
-            }
+            Dialog.confirm({
+                title: "提示",
+                message: "确认删除吗？",
+                confirmButtonColor: "#2ecb62",
+            })
+                .then(async () => {
+                    // on confirm
+                    let ids = list.map((v) => v.cartId).join(",");
+                    let res = await api.delGoods({ id: ids });
+                    if (res.success) {
+                        this.getShopcartList();
+                    } else {
+                        Toast("删除商品失败！");
+                    }
+                })
+                .catch(() => {
+                    // on cancel
+                });
         },
         //立即购买
         async buyNow() {
-            if (this.quantity == 0) return Toast("请勾选商品！");
-            let id = this.$store.state.user.info.memberUserInfoVo.id; //获取用户id
-            let storeGoodsList = this.chooseData.map(v => v.productVoList); //[ [array], [array] ]
-            let result = storeGoodsList.map((v, i) => {
-                let wrap = {};
-                let foo = v.map(o => {
-                    //[obj,obj]
-                    let obj = {};
-                    obj.productId = o.productId;
-                    obj.productNumber = o.count;
-                    obj.productPrice = o.price;
-                    obj.productSkuId = o.skuId;
-                    obj.shelveId = this.chooseData[i].upBy;
-                    obj.templateId = o.templateId;
-                    return obj;
+            if (this.quantity == 0) return Toast("请最少选择一个商品！");
+            let data = this.chooseData
+                .map((o) => o.productVoList)
+                .map((v, i) => {
+                    return {
+                        productList: v.map((m) => {
+                            return {
+                                productId: m.productId,
+                                number: m.count,
+                                skuPrice: m.price,
+                                skuId: m.skuId,
+                                templateId: m.templateId,
+                            };
+                        }),
+                        sourceType: 2,
+                        sourceId: this.$store.state.user.storeId,
+                    };
                 });
-                wrap.productList = foo;
-                wrap.sourceType = 1;
-                wrap.sourceId = id;
-                return wrap;
-            });
-            let res = await homeApi.createOrder(result);
-            if (!res.success) return this.showToast(res.message);
-            this.$router.push({ path: "/confirmorder?orderId=" + res.result });
-            // console.log(result)
-        }
+            let res = await orderApi.addStoreOrder(data);
+            if (!res.success) return Toast(res.message);
+            this.$router.push({ path: "/order/confirm/" + res.result });
+        },
     },
     watch: {
         quantity(n) {
@@ -174,7 +187,7 @@ export default {
             } else {
                 this.isSelectAll = false;
             }
-        }
+        },
     },
     created() {
         this.getShopcartList();
@@ -185,8 +198,9 @@ export default {
         ShopCard,
         waterFall,
         Empty,
-        radioOne
-    }
+        radioOne,
+        [Dialog.Component.name]: Dialog.Component,
+    },
 };
 </script>
 

@@ -1,155 +1,88 @@
 <template>
     <div class="confirm-order">
-        <div class="tab-card">
-            <div class="title-wrap row">
-                <div
-                    class="item left"
-                    :class="{ active: wayIdx == 0 }"
-                    @click="
-                        wayIdx = 0;
-                        form.deliverWayIdx = 0;
-                    "
-                >
-                    送货上门
-                </div>
-                <div
-                    class="item right"
-                    :class="{ active: wayIdx == 1 }"
-                    @click="
-                        wayIdx = 1;
-                        form.deliverWayIdx = 1;
-                    "
-                >
-                    上门自提
-                </div>
-            </div>
-            <div class="wrap-content">
-                <div class="deliver" v-show="wayIdx == 0">
-                    <!-- 无地址情况 -->
-                    <router-link
-                        tag="div"
-                        to="/workbench/address/edit"
-                        class="no-address row ac jc"
-                        v-if="!address.id"
-                    >
-                        +添加地址
-                    </router-link>
-                    <!-- 有地址情况 -->
-                    <router-link
-                        :to="'/workbench/address?orderId=' + $route.params.id"
-                        class="addr-detail"
-                        v-else
-                    >
-                        <div class="addr-info">
-                            <div>
-                                <span class="name">{{ address.name }}</span>
-                                <span class="tel">{{ address.phone }}</span>
-                            </div>
-                            <div class="e2">
-                                <i class="iconfont icondizhi1"></i>
-                                <span class="address">
-                                    {{ address.addressName + address.address }}
-                                </span>
-                            </div>
-                        </div>
-                        <i class="iconfont iconARROW"></i>
-                    </router-link>
-                </div>
-                <!-- 自提 -->
-                <div class="selftake-wrap row" v-show="wayIdx == 1">
-                    <div class="info column sb">
-                        <div class="des">(17:00前下单，次日可提)</div>
-                        <div class="shop-address">
-                            <i class="iconfont icondizhi"></i>
-                            <span>
-                                广东省佛山市南海区广佛五金城城B区22馆(广东金材宝五金建材有限公司)
-                            </span>
-                        </div>
-                        <div class="user-select row">
-                            <div
-                                class="take-time column sb"
-                                @click="pops.takeTime = true"
-                            >
-                                <span class="title">自提时间</span>
-                                <div class="row" v-if="dateList.length">
-                                    {{
-                                        `${dateList[dayIdx].month}-${dateList[dayIdx].day}`
-                                    }}
-                                    {{ options[opIdx] }}
-                                    <i class="iconfont iconARROW"></i>
-                                </div>
-                            </div>
-                            <div class="phone column sb" @click="editHandle">
-                                <span class="title">联系电话</span>
-                                <input
-                                    ref="input"
-                                    type="phone"
-                                    class="edit-phone"
-                                    v-model="contact"
-                                    v-show="editPhone"
-                                    @blur="checkPhone"
-                                    placeholder="13888888888"
-                                />
-                                <div class="row" v-show="!editPhone">
-                                    {{ contact || "13888888888" }}
-                                    <i class="iconfont iconbianji"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="rule row ac">
-                            <div
-                                class="checkbox row ac"
-                                @click="agreement = !agreement"
-                            >
-                                <i
-                                    class="iconfont iconxuanzhong3"
-                                    v-if="agreement"
-                                ></i>
-                                <div class="no" v-else></div>
-                            </div>
-                            同意
-                            <span class="agreement">《到店自取服务协议》</span>
-                        </div>
+        <div class="deliver">
+            <!-- 无地址情况 -->
+            <!-- <div class="no-address row ac jc">+添加地址</div> -->
+            <!-- 有地址情况 -->
+            <router-link to="/order/choose-address" class="addr-detail">
+                <div class="addr-info">
+                    <div>
+                        <span class="name">张三</span>
+                        <span class="tel">13711221122</span>
                     </div>
-                    <!-- <i class="iconfont iconARROW r"></i> -->
+                    <div class="e2">
+                        <i class="iconfont icondizhi1"></i>
+                        <span class="address"
+                            >地球市地球镇地球村东南西北888号</span
+                        >
+                    </div>
                 </div>
-            </div>
+                <i class="iconfont iconARROW"></i>
+            </router-link>
         </div>
 
         <!-- 商品卡片 -->
-        <div
-            class="choose-methods-card"
-            v-for="(item, index) in orderInfo"
-            :key="index"
-        >
-            <div class="goods row" v-for="(v, i) in item.productList" :key="i">
-                <img :src="v.productPic" alt="" />
-                <div class="column sb" style="margin-left: 0.23rem; flex: 1">
-                    <div class="name">
-                        {{ v.productName }}
+        <div class="choose-methods-card">
+            <div class="company">豪迪五金工具有限公司</div>
+            <div class="goods row">
+                <img src="../../assets/img/确认订单.png" alt="" />
+                <div class="column sb" style="margin-left: 0.23rem">
+                    <div class="name e2">
+                        博世 电动工具 3.6V锂电池充电起子 螺丝刀 IXO3
                     </div>
-                    <div class="sku">{{ v.propertyName }}</div>
+                    <div class="sku">规格:220V 颜色:黑色</div>
                     <div class="footer row sb ac">
-                        <span class="price">￥{{ v.skuPrice }}</span>
-                        <Stepper v-model="v.number" />
+                        <span class="price">￥298</span>
+                        <stepper v-model="form.num" />
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="choose-methods-card">
+
+            <div class="selftake-wrap row" v-show="form.deliverWayIdx == 2">
+                <div class="info column sb">
+                    <div class="title">取货信息</div>
+                    <div class="shop-address">
+                        <i class="iconfont icondizhi1"></i>
+                        <span>地球市地球镇地球村东南西北888号 </span>
+                    </div>
+                    <div class="user-select row">
+                        <div
+                            class="take-time column sb"
+                            @click="pops.takeTime = true"
+                        >
+                            <span class="title">自提时间</span>
+                            <div class="row">
+                                10-30 18:00
+                                <i class="iconfont iconARROW"></i>
+                            </div>
+                        </div>
+                        <div class="phone column sb" @click="editHandle">
+                            <span class="title">预留手机</span>
+                            <input
+                                ref="input"
+                                type="phone"
+                                class="edit-phone"
+                                v-model="contact"
+                                v-show="editPhone"
+                                @blur="checkPhone"
+                            />
+                            <div class="row" v-show="!editPhone">
+                                {{ contact }}<i class="iconfont iconbianji"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- 行 -->
-            <!-- <div class="order-field row sb ac" @click="pops.shop = true">
+            <div class="order-field row sb ac" @click="pops.shop = true">
                 <span class="left">优惠</span>
                 <div class="right row ac">
                     <span>-￥10.00 </span>
                     <i class="iconfont iconARROW"></i>
                 </div>
-            </div> -->
-            <div
-                class="order-field row sb ac"
-                @click="pops.way = true"
-                v-if="wayIdx == 0"
-            >
+            </div>
+            <div class="order-field row sb ac" @click="pops.way = true">
                 <span class="left">
                     配送方式
                     <span class="desc">{{
@@ -161,7 +94,7 @@
                     <i class="iconfont iconARROW"></i>
                 </div>
             </div>
-            <!-- <div class="order-field row sb ac" v-show="wayIdx == 0">
+            <div class="order-field row sb ac" v-show="form.deliverWayIdx == 0">
                 <span class="left"
                     >运费险 <span class="desc">货物运输过程中有损，可赔</span>
                 </span>
@@ -173,12 +106,12 @@
                     <i
                         class="iconfont insurance"
                         :class="[
-                            { iconradiobuttonunselect: !form.insurance },
+                            { iconyuan: !form.insurance },
                             { iconxuanzhong: form.insurance },
                         ]"
                     ></i>
                 </span>
-            </div> -->
+            </div>
             <div class="order-field row sb ac">
                 <span class="left">备注</span>
                 <input
@@ -227,7 +160,7 @@
                     你当前可用集采分为0，本次订单最多可使用316.8分，你的集采分不足，请重新选择支付方式
                 </div>
             </div>
-            <!-- <div class="account-info" v-if="payType == 2">
+            <div class="account-info" v-if="payType == 2">
                 <div class="top">选择支付账号</div>
 
                 <div
@@ -251,7 +184,16 @@
                     </div>
                     <i class="iconfont iconxuanzhong4"></i>
                 </div>
-            </div> -->
+            </div>
+        </div>
+
+        <div class="rule row ac">
+            <div class="checkbox row ac" @click="agreement = !agreement">
+                <i class="iconfont iconxuanzhong3" v-if="agreement"></i>
+                <div class="no" v-else></div>
+            </div>
+            <span>同意</span>
+            <span class="agreement">《到店自取服务协议》</span>
         </div>
 
         <div class="tabbar row sb ac">
@@ -259,7 +201,7 @@
                 <span class="word">合计:</span>
                 <span class="money">￥316.8</span>
             </div>
-            <div class="buy-btn row ac jc" @click="pay">立即购买</div>
+            <div class="buy-btn row ac jc">立即购买</div>
         </div>
 
         <!-- 又是一堆弹框 x_x -->
@@ -277,15 +219,12 @@
                     </div>
                 </div>
                 <div class="time">
-                    <div
-                        class="row sb ac"
-                        style="height: 0.68rem"
-                        v-for="(v, i) in options"
-                        :key="i"
-                        :class="{ 'active-time': i == opIdx }"
-                        @click="opIdx = i"
-                    >
-                        <span>{{ v }}</span>
+                    <div class="row sb ac active-time" style="height: 0.68rem">
+                        <span>12:00</span>
+                        <i class="iconfont iconxuanzhong2"></i>
+                    </div>
+                    <div class="row sb ac" style="height: 0.68rem">
+                        <span>12:30</span>
                         <i class="iconfont iconxuanzhong2"></i>
                     </div>
                 </div>
@@ -334,7 +273,7 @@
                             class="iconfont iconxuanzhong"
                             v-if="i == form.shopIdx"
                         ></i>
-                        <i class="iconfont iconcircle" v-else></i>
+                        <i class="iconfont iconradiobuttonunselect" v-else></i>
                     </div>
                     <div class="coupon-item row ac">
                         <div class="left-top row ac jc">满减券</div>
@@ -358,28 +297,28 @@
             <div class="pay-content">
                 <radio-group v-model="payType">
                     <cell-group>
-                        <cell title="微信支付" clickable @click="payType = 1">
+                        <cell title="微信支付" clickable @click="payType = '1'">
                             <template #title>
                                 <i class="iconfont iconweixin"></i>
                                 <span class="custom-title">微信支付</span>
                             </template>
                             <template #right-icon>
-                                <radio :name="1" checked-color="#2ecb62" />
+                                <radio name="1" checked-color="#2ecb62" />
                             </template>
                         </cell>
-                        <cell title="线下支付" clickable @click="payType = 2">
+                        <cell title="线下支付" clickable @click="payType = '2'">
                             <template #title>
                                 <i class="iconfont iconyinhangka2"></i>
                                 <span class="custom-title">线下支付</span>
                             </template>
                             <template #right-icon>
-                                <radio :name="2" checked-color="#2ecb62" />
+                                <radio name="2" checked-color="#2ecb62" />
                             </template>
                         </cell>
-                        <!-- <cell
+                        <cell
                             title="集采分支付"
                             clickable
-                            @click="payType = 3"
+                            @click="payType = '3'"
                         >
                             <template #title>
                                 <i class="iconfont iconjicaifen"></i>
@@ -388,7 +327,7 @@
                             <template #right-icon>
                                 <radio name="3" checked-color="#2ecb62" />
                             </template>
-                        </cell> -->
+                        </cell>
                     </cell-group>
                 </radio-group>
 
@@ -404,61 +343,36 @@
 </template>
 
 <script>
-import {
-    ActionSheet,
-    Stepper,
-    RadioGroup,
-    Radio,
-    Cell,
-    CellGroup,
-    Toast,
-} from "vant";
-import api from "../../api/order";
-import userApi from "../../api/user";
+import { ActionSheet, Stepper, RadioGroup, Radio, Cell, CellGroup } from "vant";
 export default {
     data() {
         return {
-            orderno: this.$route.params.id,
-            orderInfo: [],
-            address: {},
-            options: [],
-            opIdx: 0,
-            wayIdx: 0,
+            wayIdx: 1,
             agreement: false, //同意协议
             editPhone: false, //编辑手机号
             dateList: [], //日期
             dayIdx: 0, //选中的日期索引
-            contact: "", // 联系电话
-            deliverWay: ["快递配送", "物流到付"],
+            contact: "12345678900", // 联系电话
             form: {
+                platformIdx: -1, //平台优惠券索引
                 shopIdx: -1, //店铺优惠券索引
                 deliverWayIdx: 0, //配送方式 两种
                 num: 1,
                 insurance: false, //运费险
                 message: "",
             },
+            deliverWay: ["快递配送", "物流到付", "上门自提"],
             pops: {
                 takeTime: false,
                 way: false,
-                pay: false,
                 shop: false,
+                pay: false,
             },
             payType: 1,
             account_index: -1, //线下支付账户索引
         };
     },
-    created() {
-        this.getTimeList();
-        this.getOrderInfo();
-        //判断url 来决定调用什么方式来获取地址
-        let { addressId } = this.$route.query || "";
-        addressId ? this.getAddress() : this.getAddressList();
-    },
     methods: {
-        async getOrderInfo() {
-            let res = await api.getOrderInfo(this.orderno);
-            this.orderInfo = res.result;
-        },
         getMonthDay() {
             // let date = new Date()
             let oneDay = 86400000; //一天
@@ -487,100 +401,21 @@ export default {
         checkPhone(e) {
             this.editPhone = false;
         },
+        platformHandle(i) {
+            // 店铺优惠切换
+            if (this.form.platformIdx == i) {
+                this.form.platformIdx = -1;
+                return;
+            }
+            this.form.platformIdx = i;
+        },
         shopHandle(i) {
-            // 优惠券切换
+            // 店铺优惠切换
             if (this.form.shopIdx == i) {
                 this.form.shopIdx = -1;
                 return;
             }
             this.form.shopIdx = i;
-        },
-        async getAddressList() {
-            let res = await userApi.getAddressList({
-                memberId: this.$store.state.user.userId,
-                pageNo: 1,
-                pageSize: 9999,
-            });
-            let addressList = res.result.records || [];
-            if (addressList.length) {
-                addressList.forEach((v, i) => {
-                    if (i == 0 || v.defaultUse) {
-                        this.address = v;
-                    }
-                });
-            }
-        },
-        async getAddress() {
-            let { addressId } = this.$route.query;
-            let res = await userApi.getOneAddress(addressId);
-            if (res.success) {
-                this.address = res.result;
-            }
-        },
-        async pay() {
-            if (this.wayIdx) {
-                if (!this.contact) return Toast("请填写联系电话!");
-                if (!this.agreement)
-                    return Toast("请先阅读并同意到点自取服务协议！");
-            }
-
-            if (!this.wayIdx) {
-                if (!this.address.id) return Toast("请先选择收货地址！");
-            }
-
-            var orderList = this.orderInfo.map((v) => {
-                return {
-                    orderId: v.id,
-                    productList: v.productList.map((m) => {
-                        return {
-                            number: m.number,
-                            orderProductId: m.orderProductId,
-                            skuId: m.skuId,
-                            skuPrice: m.skuPrice,
-                            templateId: m.templateId,
-                        };
-                    }),
-                };
-            });
-            let params = {
-                discount: 0,
-                freightAmount: 0,
-                note: this.form.message,
-                orderList: orderList,
-                paymentMethods:
-                    this.payType == 1 ? 1 : this.payType == 2 ? 4 : 3, //支付方式(1-微信支付 2-支付宝支付 3-集采分支付 4-线下支付)
-                receiveAddressId: this.wayIdx == 0 ? this.address.id : 0, //收货地址
-                selfCarry: this.wayIdx ? 1 : this.form.deliverWayIdx ? 3 : 2, //配送方式(配送类型 1-买家自提 2-快递配送 3-物流到付
-                selfPhone: this.wayIdx ? this.contact : "", //自提预留手机号
-                selfTime: this.wayIdx ? this.getSelfTime() : "", //自提时间
-            };
-
-            let res = await api.pay(params);
-        },
-        getTimeList() {
-            let openHours = "2020-11-22 08:30:00";
-            let closeHours = "2020-11-22 18:30:00";
-
-            let [min, max] = [openHours, closeHours].map(
-                (v) => new Date(v) * 1
-            );
-            const halfHours = 30 * 60 * 1000;
-            let cur = min;
-            let arr = [];
-            while (cur <= max) {
-                arr.push(cur);
-                cur += halfHours;
-            }
-            this.options = arr.map((s) =>
-                new Date(s).toTimeString().substr(0, 5)
-            );
-        },
-        getSelfTime() {
-            let year = new Date().getFullYear();
-            var timeStr = `${year}-${this.dateList[this.dayIdx].month}-${
-                this.dateList[this.dayIdx].day
-            } ${this.options[this.opIdx]}:00`;
-            return timeStr;
         },
     },
     mounted() {
@@ -599,177 +434,131 @@ export default {
 
 <style lang="less" scoped>
 .confirm-order {
-    // height: 100vh;
-    // overflow: scroll;
+    height: 100vh;
+    overflow: scroll;
     background-color: #f6f6f6;
     padding: 0.23rem 0.27rem 1rem 0.27rem;
 }
-.tab-card {
-    background-color: #ffffff;
-    // width: 100%;
-    margin-top: 0.2rem;
-    margin-bottom: 20px;
-    .title-wrap {
-        position: relative;
-        .item {
+.deliver {
+    margin-bottom: 0.27rem;
+    padding: 0.2rem 0.1rem;
+    border-radius: 0.113rem;
+    background: #ffffff;
+    .no-address {
+        height: 0.73rem;
+        background-color: #f6f6f6;
+        font-size: 0.21rem;
+        color: #a8a8a8;
+    }
+    .addr-detail {
+        display: flex;
+        align-items: center;
+        min-height: 0.836rem;
+        .iconARROW {
+            font-size: 0.3rem;
+            color: #000000;
+            margin-left: 0.2rem;
+            font-weight: bold;
+        }
+        .addr-info {
             flex: 1;
-            color: #1a1a1a;
-            font-size: 0.24rem;
-            height: 0.56rem; //60px
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #dddddd;
-        }
-        .active.left::after {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 0;
-            transform: translateX(50%);
-            width: 0px;
-            height: 0px;
-            border-left: 0.26rem solid transparent;
-            border-right: 0.26rem solid transparent;
-            border-bottom: 0.68rem solid #ffffff;
-        }
-        .active.right::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 0.26rem solid transparent;
-            border-right: 0.26rem solid transparent;
-            border-bottom: 0.68rem solid #ffffff;
-        }
-        .active {
-            color: #1a1a1a;
-            background-color: #ffffff;
-            transform: translateY(-0.1rem);
+            .name,
+            .tel {
+                color: #000000;
+                font-size: 0.237rem;
+                font-weight: bold;
+                margin-right: 0.2rem;
+            }
+            .e2 {
+                margin-top: 0.1rem;
+            }
+            .icondizhi1 {
+                font-size: 0.22rem;
+                margin-right: 0.1rem;
+            }
+            .address {
+                color: #000000;
+                font-size: 0.215rem;
+            }
         }
     }
-    .wrap-content {
-        box-sizing: border-box;
-        padding: 0.26rem 0.18rem;
-        background-color: #ffffff;
-        .deliver {
-            .no-address {
-                height: 0.73rem;
-                background-color: #f6f6f6;
-                font-size: 0.21rem;
-                color: #a8a8a8;
+}
+.selftake-wrap {
+    position: relative;
+    box-sizing: border-box;
+    padding: 0.1rem;
+    background-color: #f6f6f6;
+    border-radius: 0.113rem;
+    .info {
+        .title {
+            color: #a8a8a8;
+            font-size: 0.215rem;
+            padding: 0.1rem 0;
+        }
+        .shop-address {
+            font-size: 0.237rem;
+            color: #000000;
+            i {
+                font-size: 0.22rem;
             }
-            .addr-detail {
-                display: flex;
-                align-items: center;
-                min-height: 0.836rem;
-                .iconARROW {
-                    font-size: 0.3rem;
-                    color: #000000;
-                    margin-left: 0.2rem;
-                    font-weight: bold;
+            span {
+                margin-left: 0.23rem;
+            }
+        }
+        .user-select {
+            margin: 0.1rem 0 0.1rem 0;
+            font-size: 0.21rem;
+            color: #000000;
+            .title {
+                color: #000000;
+                font-size: 0.215rem;
+            }
+            .phone {
+                margin-left: 0.56rem;
+                .edit-phone {
+                    border: none;
+                    text-align: center;
+                    border-bottom: 1px solid #cccccc;
                 }
-                .addr-info {
-                    flex: 1;
-                    .name,
-                    .tel {
-                        color: #000000;
-                        font-size: 0.237rem;
-                        font-weight: bold;
-                        margin-right: 0.2rem;
-                    }
-                    .e2 {
-                        margin-top: 0.1rem;
-                    }
-                    .icondizhi1 {
-                        font-size: 0.22rem;
-                        margin-right: 0.1rem;
-                    }
-                    .address {
-                        color: #000000;
-                        font-size: 0.215rem;
-                    }
+            }
+            .row {
+                margin-top: 0.06rem;
+                justify-content: flex-end;
+                line-height: 1;
+                i {
+                    font-size: 0.2rem;
+                    color: #a8a8a8;
+                    margin-left: 0.08rem;
                 }
             }
         }
-        .selftake-wrap {
-            position: relative;
-            padding-right: 0.6rem;
-            box-sizing: border-box;
-            .info {
-                .des {
-                    font-size: 0.181rem;
-                    color: #2ecb62;
-                    margin-bottom: 0.05rem;
-                }
-                .shop-address {
-                    font-size: 0.22rem;
-                    color: #000000;
-                    i {
-                        font-size: 0.22rem;
-                    }
-                    span {
-                        margin-left: 0.23rem;
-                    }
-                }
-                .user-select {
-                    // .title{
-                    margin: 0.24rem 0 0.23rem 0;
-                    font-size: 0.21rem;
-                    color: #000000;
-                    // }
-                    .phone {
-                        margin-left: 0.56rem;
-                        .edit-phone {
-                            border: none;
-                            text-align: center;
-                            border-bottom: 1px solid #cccccc;
-                        }
-                    }
-                    .row {
-                        margin-top: 0.16rem;
-                        justify-content: flex-end;
-                        line-height: 1;
-                        i {
-                            font-size: 0.2rem;
-                            color: #a8a8a8;
-                            margin-left: 0.08rem;
-                            // font-weight: bold;
-                        }
-                    }
-                }
+    }
+    .rule {
+        color: #1a1a1a;
+        font-size: 0.2rem;
+        .checkbox {
+            margin-right: 0.14rem;
+            .no {
+                border: 1px solid #dddddd;
+                width: 0.2rem;
+                height: 0.2rem;
+                box-sizing: border-box;
             }
-            .rule {
-                color: #1a1a1a;
+            i {
                 font-size: 0.2rem;
-                .checkbox {
-                    margin-right: 0.14rem;
-                    .no {
-                        border: 1px solid #dddddd;
-                        width: 0.2rem;
-                        height: 0.2rem;
-                        box-sizing: border-box;
-                    }
-                    i {
-                        font-size: 0.2rem;
-                        color: #2ecb62;
-                    }
-                }
-                .agreement {
-                    color: #13438c;
-                }
-            }
-            .r {
-                position: absolute;
-                top: 0.45rem;
-                right: 0;
-                font-size: 0.4rem;
-                font-weight: bold;
+                color: #2ecb62;
             }
         }
+        .agreement {
+            color: #13438c;
+        }
+    }
+    .r {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 0.4rem;
+        font-weight: bold;
     }
 }
 .choose-methods-card {
@@ -777,6 +566,11 @@ export default {
     background-color: #ffffff;
     border-radius: 0.11rem;
     margin-bottom: 0.23rem;
+    .company {
+        font-size: 0.181rem;
+        color: #1a1a1a;
+        margin-bottom: 0.2rem;
+    }
     .goods {
         margin-bottom: 0.2rem;
         img {
@@ -795,6 +589,9 @@ export default {
         .price {
             font-size: 0.27rem;
             color: #fc0808;
+        }
+        /deep/ .van-stepper {
+            display: flex;
         }
     }
     .order-field {
@@ -821,6 +618,7 @@ export default {
         .iconARROW {
             color: #a8a8a8;
             font-size: 0.25rem;
+            // margin-top: 0.05rem;
         }
         .right {
             .insurance {
@@ -831,7 +629,7 @@ export default {
                 &.iconxuanzhong {
                     color: #2ecb62;
                 }
-                &.iconcircle {
+                &.iconradiobuttonunselect {
                     color: #dddddd;
                 }
             }
@@ -970,9 +768,11 @@ export default {
         color: #1a1a1a;
         font-size: 0.27rem;
         margin-right: 0.2rem;
+        font-weight: bold;
     }
     .money {
         font-size: 0.27rem;
+        font-weight: bold;
         color: #fc0808;
     }
     .buy-btn {
@@ -1206,6 +1006,7 @@ export default {
 }
 .radio {
     margin-right: 0.27rem;
+    width: 0.4rem;
     .iconradiobuttonunselect {
         color: #a8a8a8;
         font-size: 0.3rem;
@@ -1235,8 +1036,5 @@ export default {
     .agreement {
         color: #13438c;
     }
-}
-/deep/ .van-stepper {
-    display: flex;
 }
 </style>

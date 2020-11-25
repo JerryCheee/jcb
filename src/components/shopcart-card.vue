@@ -1,41 +1,53 @@
 <template>
     <div class="shopcart-card">
-        <div class="shop-name row ac">
+        <!-- <div class="shop-name row ac">
             <radio-one v-model="checkAll" @click.native="chooseAll"></radio-one>
 
-            <div style="margin-left:0.23rem">
+            <div style="margin-left: 0.23rem">
                 <i class="iconfont iconshangcheng"></i>
-                <router-link :to="'/store?id='+info.storeId" tag="span">{{info.storeName}}</router-link>
+                <router-link :to="'/store?id=' + info.storeId" tag="span">{{
+                    info.supplierName
+                }}</router-link>
                 <i class="iconfont iconARROW"></i>
             </div>
-            <!-- <i class="iconfont "></i> -->
-        </div>
+        </div> -->
         <!-- 卡片 -->
         <div
             class="goods-card row ac sb"
-            :style="{opacity:item.state!=1?'0.4':''}"
-            v-for="(item,i) in info.productVoList"
+            :style="{ opacity: item.state != 1 ? '0.4' : '' }"
+            v-for="(item, i) in info.productVoList"
             :key="item.cartId"
         >
-            <radio-one v-model="checkList[i]" @click.native="selectOne(i)"></radio-one>
+            <radio-one
+                v-model="checkList[i]"
+                @click.native="selectOne(i)"
+            ></radio-one>
             <img :src="item.pic" alt />
             <div class="info column sb">
-                <div class="name e2">{{item.productName}}</div>
-                <span class="spec e2">{{item.prop}}</span>
+                <router-link
+                    tag="div"
+                    :to="'/goods/detail?id=' + item.productId"
+                    class="name e2"
+                >
+                    {{ item.productName }}
+                </router-link>
+                <span class="spec e2">{{ item.prop }}</span>
                 <div class="row sb">
-                    <span class="price">￥{{item.price||0}}</span>
+                    <span class="price">￥{{ item.price || 0 }}</span>
                     <!-- <InputNumer v-model="list[i].count" @change="changeNum(i, item.cartId)"></InputNumer> -->
-                    <Stepper v-model="list[i].count" @change="changeNum(i, item.cartId)" />
+                    <Stepper
+                        v-model="list[i].count"
+                        @change="changeNum(i, item.cartId)"
+                    />
                 </div>
             </div>
             <!-- //商品无效时候展示  z主要阻止用户点击其他-->
-            <div class="enable-box" v-if="item.state!=1"></div>
+            <div class="enable-box" v-if="item.state != 1"></div>
         </div>
     </div>
 </template>
 
 <script>
-// import InputNumer from '../../common/my/input-number'
 import { Stepper } from "vant";
 import RadioOne from "./radio-one";
 export default {
@@ -47,7 +59,7 @@ export default {
             checkList: [], //选中数组
             child: 0, //该店下商品总数
             list: [], //存储对象 给数量绑定用
-            selectedObj: {} //发送给父的对象
+            selectedObj: {}, //发送给父的对象
         };
     },
     props: ["info"],
@@ -65,7 +77,7 @@ export default {
             if (this.checkAll) {
                 // this.selectedObj.productVoList = JSON.parse(JSON.stringify(this.info.productVoList))
                 this.selectedObj.productVoList = JSON.parse(
-                    JSON.stringify(this.list.filter(v => v.state == 1))
+                    JSON.stringify(this.list.filter((v) => v.state == 1))
                 );
             } else {
                 this.selectedObj.productVoList = [];
@@ -81,7 +93,7 @@ export default {
             } else {
                 //删除商品
                 let index = this.selectedObj.productVoList.findIndex(
-                    v => v.cartId == obj.cartId
+                    (v) => v.cartId == obj.cartId
                 );
                 this.selectedObj.productVoList.splice(index, 1);
             }
@@ -94,17 +106,17 @@ export default {
         changeNum(i, id) {
             //如果没选中 就不触发
             let res = this.selectedObj.productVoList.findIndex(
-                v => v.cartId == id
+                (v) => v.cartId == id
             );
             if (res == -1) return;
             this.selectedObj.productVoList[res].count = this.list[i].count;
             this.$emit("getData", this.selectedObj);
-        }
+        },
     },
     watch: {},
     created() {
         this.list = this.info.productVoList;
-        this.child = this.info.productVoList.filter(v => v.state == 1).length;
+        this.child = this.info.productVoList.filter((v) => v.state == 1).length;
         for (let i = 0; i < this.child; i++) {
             if (this.list[i].state != 1) continue;
             this.checkList[i] = false;
@@ -115,8 +127,8 @@ export default {
     },
     components: {
         Stepper,
-        RadioOne
-    }
+        RadioOne,
+    },
 };
 </script>
 
@@ -133,10 +145,10 @@ export default {
     flex-shrink: 0;
 }
 .shopcart-card {
-    background-color: #ffffff;
-    border-radius: 0.11rem;
-    padding: 0.2rem 0.23rem;
-    margin-bottom: 0.23rem;
+    // background-color: #ffffff;
+    // border-radius: 0.11rem;
+    // padding: 0.2rem 0.23rem;
+    // margin-bottom: 0.23rem;
     .shop-name {
         font-size: 0.2rem;
         // height: 0.3rem;
@@ -149,7 +161,11 @@ export default {
         }
     }
     .goods-card {
-        margin-top: 0.4rem;
+        // margin-top: 0.4rem;
+        background-color: #ffffff;
+        border-radius: 0.11rem;
+        padding: 0.2rem 0.23rem;
+        margin-bottom: 0.23rem;
         position: relative;
         img {
             width: 1.41rem;
