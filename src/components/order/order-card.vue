@@ -11,7 +11,17 @@
             v-if="
                 order.paymentMethods == 4 &&
                 order.isPaymentVoucherSrc &&
-                order.status
+                order.status == 1
+            "
+        >
+            支付凭证已上传，等待商家处理
+        </div>
+        <div
+            class="pz"
+            v-if="
+                order.paymentMethods == 4 &&
+                order.isPaymentVoucherSrc &&
+                order.status > 1
             "
         >
             支付凭证已上传
@@ -21,7 +31,7 @@
             v-if="
                 order.paymentMethods == 4 &&
                 !order.isPaymentVoucherSrc &&
-                order.status
+                order.status == 1
             "
         >
             支付凭证未上传，请及时上传

@@ -7,6 +7,7 @@
             color="#2ecb62"
             animated
             swipeable
+            sticky
             @click="clickHandle"
         >
             <tab
@@ -45,7 +46,7 @@ export default {
     },
     methods: {
         clickHandle(e) {
-            this.$router.push("/workbench/shop-orders/" + e);
+            this.$router.replace("/workbench/shop-orders/" + e);
         },
     },
     components: {

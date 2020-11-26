@@ -2,12 +2,12 @@
     <div class="order-wrap">
         <tabs
             v-model="tabIdx"
+            line-width="0.452rem"
+            line-height="0.068rem"
             color="#2ecb62"
-            class="tab"
-            ref="tabs"
             animated
-            sticky
             swipeable
+            sticky
         >
             <tab
                 v-for="(item, index) in tabs"

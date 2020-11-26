@@ -4,7 +4,7 @@
         :to="`/workbench/shop-order/${order.id}`"
         class="order-card"
     >
-        <div class="top">
+        <div class="top" v-if="order.getApiVo">
             <div class="shop">
                 <i class="iconfont iconshangcheng"></i>
                 <span class="shop-name">{{ order.getApiVo.name }}</span>

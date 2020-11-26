@@ -76,8 +76,9 @@ export default {
             });
             if (res.success) {
                 Toast("支付凭证上传成功，请等待后台审核");
-                this.$store.dispatch("getOrderInfo", this.order.id);
-                this.$forceUpdate();
+                setTimeout(() => {
+                    this.$router.back(-1);
+                }, 1000);
             } else {
                 Toast(res.message);
             }
