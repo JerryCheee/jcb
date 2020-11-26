@@ -60,4 +60,7 @@ export default {
 /deep/.van-tab {
     color: #1a1a1a;
 }
+/deep/ .van-tab__pane-wrapper {
+    min-height: 80vh;
+}
 </style>

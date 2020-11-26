@@ -31,7 +31,7 @@ export default {
             this.$store.commit("SET_USERID", this.userId);
             this.isReady = true;
         } else {
-            this.$router.push("/login");
+            // this.$router.push("/login");
         }
     },
 

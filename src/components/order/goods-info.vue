@@ -17,7 +17,10 @@
                         {{ item.propertyName }}
                     </span>
                 </div>
-                <span class="num">x{{ item.number }}</span>
+                <div class="row">
+                    <span class="price">￥{{ item.skuPrice }}</span>
+                    <span class="num">x{{ item.number }}</span>
+                </div>
             </div>
         </div>
     </div>
@@ -36,7 +39,8 @@ export default {
 <style lang="less" scoped>
 .order-goods-card {
     background-color: #ffffff;
-    border-radius: 0.11rem;
+    border-top-left-radius: 0.11rem;
+    border-top-right-radius: 0.11rem;
     padding: 0.24rem;
     box-sizing: border-box;
     .goods-item {
@@ -47,6 +51,7 @@ export default {
             border-radius: 0.11rem;
         }
         .right {
+            flex: 1;
             height: 1.41rem;
             margin-left: 0.23rem;
             .name {
@@ -59,12 +64,27 @@ export default {
                     margin-left: 0.22rem;
                 }
             }
-            .sku,
-            .num {
+            .sku {
                 font-size: 0.18rem;
                 color: #a8a8a8;
             }
+            .row {
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                .num {
+                    font-size: 0.215rem;
+                    color: #a8a8a8;
+                }
+                .price {
+                    font-size: 0.271rem;
+                    color: #fc0808;
+                }
+            }
         }
+    }
+    .goods-item:last-child {
+        margin-bottom: 0;
     }
 }
 </style>

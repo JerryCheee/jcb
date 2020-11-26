@@ -112,7 +112,7 @@ export default new Router({
                 import ('@/views/workbench/shop-orders')
         },
         {
-            path: '/workbench/shop-order/:orderno',
+            path: '/workbench/shop-order/:id',
             name: 'shop-order',
             meta: { title: '店铺交易订单详情' },
             component: () =>
@@ -223,48 +223,6 @@ export default new Router({
             component: () =>
                 import ('@/views/login/set')
         },
-        // {
-        //     path: '/waitPay',
-        //     name: 'waitPay',
-        //     meta: { title: '待支付' },
-        //     component: () =>
-        //         import ('@/views/order/state/wait-pay')
-        // },
-        // {
-        //     path: '/waitConsignment',
-        //     name: 'waitConsignment',
-        //     meta: { title: '待发货' },
-        //     component: () =>
-        //         import ('@/views/order/state/wait-consignment')
-        // },
-        // {
-        //     path: '/waitReceive',
-        //     name: 'waitReceive',
-        //     meta: { title: '待收货' },
-        //     component: () =>
-        //         import ('@/views/order/state/wait-receive')
-        // },
-        // {
-        //     path: '/waitRefund',
-        //     name: 'waitRefund',
-        //     meta: { title: '待退款' },
-        //     component: () =>
-        //         import ('@/views/order/state/wait-refund')
-        // },
-        // {
-        //     path: '/cancel',
-        //     name: 'cancel',
-        //     meta: { title: '取消订单' },
-        //     component: () =>
-        //         import ('@/views/order/state/cancel')
-        // },
-        // {
-        //     path: '/complete',
-        //     name: 'complete',
-        //     meta: { title: '交易成功' },
-        //     component: () =>
-        //         import ('@/views/order/state/complete')
-        // },
         {
             path: '/order/detail',
             name: 'order-detail',

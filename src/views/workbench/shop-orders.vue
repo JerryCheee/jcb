@@ -12,21 +12,11 @@
             <tab
                 v-for="(item, index) in tabs"
                 :key="index"
-                :title="item"
+                :name="item.name"
+                :title="item.title"
                 replace
             >
-                <list
-                    v-model="loading"
-                    :finished="finished"
-                    finished-text="没有更多了"
-                    @load="onLoad"
-                >
-                    <ShopOrderCard
-                        v-for="(order, n) in 6"
-                        :key="n"
-                        :order="order"
-                    />
-                </list>
+                <ShopOrderList :status="active" />
             </tab>
         </tabs>
     </div>
@@ -34,25 +24,26 @@
 
 <script>
 import { Tab, Tabs, List } from "vant";
-import ShopOrderCard from "../../components/shop-order-card";
+import ShopOrderList from "../../components/shop-order-list";
 export default {
     data() {
         return {
             loading: false,
             finished: false,
-            active: 0,
-            tabs: ["全部", "待支付", "待收货", "已完成", "退货售后"],
+            active: "",
+            tabs: [
+                { name: "", title: "全部" },
+                { name: "1", title: "待支付" },
+                { name: "2", title: "待收货" },
+                { name: "6", title: "已完成" },
+                { name: "5", title: "退货售后" },
+            ],
         };
     },
     created() {
-        this.active = Number(this.$route.params.state || 0);
+        this.active = this.$route.params.state;
     },
     methods: {
-        onLoad() {
-            setTimeout(() => {
-                this.finished = true;
-            }, 1500);
-        },
         clickHandle(e) {
             this.$router.push("/workbench/shop-orders/" + e);
         },
@@ -60,8 +51,7 @@ export default {
     components: {
         Tab,
         Tabs,
-        List,
-        ShopOrderCard,
+        ShopOrderList,
     },
 };
 </script>
@@ -73,5 +63,8 @@ export default {
 }
 /deep/ .van-tab--active {
     font-weight: bold;
+}
+/deep/ .van-tab__pane-wrapper {
+    min-height: 80vh;
 }
 </style>

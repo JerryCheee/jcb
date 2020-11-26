@@ -62,7 +62,7 @@
                         <div class="shop-address">
                             <i class="iconfont icondizhi"></i>
                             <span>
-                                广东省佛山市南海区广佛五金城城B区22馆(广东金材宝五金建材有限公司)
+                                广东省佛山市南海区大沥镇广佛五金城城B区22馆18-33号（豪迪五金）
                             </span>
                         </div>
                         <div class="user-select row">

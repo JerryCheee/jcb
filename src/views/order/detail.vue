@@ -1,10 +1,16 @@
 <template>
     <div>
-        <OrderPay v-if="order.status == 1" :order="order" />
+        <OrderPay
+            v-if="order.status == 1 && order.paymentMethods != 4"
+            :order="order"
+        />
         <OrderReceive v-if="order.status == 3" :order="order" />
         <OrderConsignment v-if="order.status == 2" :order="order" />
         <OrderRefund v-if="order.status == 5" :order="order" />
-        <!-- <OrderCertificate v-if="order.status==1" /> -->
+        <OrderCertificate
+            v-if="order.status == 1 && order.paymentMethods == 4"
+            :order="order"
+        />
         <OrderComplete v-if="order.status == 6" :order="order" />
         <OrderCancel v-if="order.status == 0" :order="order" />
     </div>
@@ -20,20 +26,19 @@ import OrderRefund from "../../components/order-vue/wait-refund"; //待退款
 import OrderCertificate from "../../components/order-vue/certificate"; //上传凭证
 import OrderComplete from "../../components/order-vue/complete"; //交易成功
 import OrderCancel from "../../components/order-vue/cancel"; //交易取消
+import { mapState } from "vuex";
 export default {
     data() {
         return {
             id: this.$route.query.id,
-            order: {},
         };
     },
     created() {
-        this.init();
+        this.$store.dispatch("getOrderInfo", this.id);
     },
-    methods: {
-        async init() {
-            let res = await api.getOrderDetail(this.id);
-            this.order = res.result || {};
+    computed: {
+        order() {
+            return this.$store.state.order.info;
         },
     },
     components: {

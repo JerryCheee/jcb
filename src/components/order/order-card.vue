@@ -8,13 +8,21 @@
         </div>
         <div
             class="pz"
-            v-if="order.paymentMethods == 4 && order.isPaymentVoucherSrc"
+            v-if="
+                order.paymentMethods == 4 &&
+                order.isPaymentVoucherSrc &&
+                order.status
+            "
         >
             支付凭证已上传
         </div>
         <div
             class="pz"
-            v-if="order.paymentMethods == 4 && !order.isPaymentVoucherSrc"
+            v-if="
+                order.paymentMethods == 4 &&
+                !order.isPaymentVoucherSrc &&
+                order.status
+            "
         >
             支付凭证未上传，请及时上传
         </div>
@@ -23,7 +31,7 @@
             class="goods-item row ac"
             v-for="(item, index) in order.productList"
             :key="index"
-            @click.stop="goProductDetail(item.orderProductId)"
+            @click.stop="goProductDetail(item.productId)"
         >
             <img :src="item.productPic" alt="" />
             <div class="right column sb">

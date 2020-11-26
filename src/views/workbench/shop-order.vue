@@ -1,84 +1,172 @@
 <template>
     <div class="page">
         <div class="top">
-            <div class="order-state">待发货</div>
-            <div class="order-des">用户已下单，请及时发货</div>
+            <div class="order-state">{{ status[order.status] }}</div>
+            <div class="order-des" v-if="order.status == 2">
+                用户已下单，请及时发货
+            </div>
+            <div class="order-des" v-if="order.status == 7">用户上门自提</div>
+            <div class="order-des" v-if="order.status == 3">
+                已发货，等待用户确认收货
+            </div>
+            <div class="order-des" v-if="order.status == 1">
+                <span>等待用户支付，剩余</span>
+                <CountDown :time="getTime(order.commitTime)" />
+            </div>
+            <div class="order-des" v-if="order.status == 5">用户已申请退款</div>
+            <div class="order-des" v-if="order.status == 0">交易已关闭</div>
+            <div
+                class="order-des"
+                v-if="order.status == 6 && order.selfCarry != 1"
+            >
+                交易成功
+            </div>
+            <div
+                class="order-des"
+                v-if="order.status == 6 && order.selfCarry == 1"
+            >
+                用户已取货，交易已完成
+            </div>
         </div>
         <div class="products">
-            <div class="pro" v-for="(item, index) in 1" :key="index">
-                <img src="../../assets/img/分类-商品图.png" alt="" />
+            <div
+                class="pro"
+                v-for="(item, index) in order.productList"
+                :key="index"
+            >
+                <img :src="item.productPic" alt="" />
                 <div class="info">
                     <div class="pro-name e2">
-                        博世 电动工具 3.6V锂电池充电起子 螺丝刀 IXO3
+                        {{ item.productName }}
                     </div>
-                    <div class="pro-sku">规格:220V &emsp; 颜色:黑色</div>
+                    <div class="pro-sku">{{ item.propertyName }}</div>
                     <div class="pro-bottom">
-                        <span class="price">￥298</span>
-                        <div class="count">x1</div>
+                        <span class="price">￥{{ item.skuPrice }}</span>
+                        <div class="count">x{{ item.number }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="address">
-            <div class="name">张三&emsp;13711221122</div>
+        <div class="address" v-if="order.selfCarry == 1 && order.getApiVo">
+            <div class="name">{{ order.getApiVo.name }}&emsp;13711221122</div>
             <div class="info">
                 <i class="iconfont icondizhi1"></i>
-                <span>地球市地球镇地球村东南西北888号</span>
+                <span>{{ order.getApiVo.addressName }}</span>
+            </div>
+        </div>
+        <div class="address" v-else>
+            <div class="name">
+                {{ order.receiveBy }}&emsp;{{ order.receivePhone }}
+            </div>
+            <div class="info">
+                <i class="iconfont icondizhi1"></i>
+                <span>{{ order.receiveAddress }}</span>
             </div>
         </div>
 
         <div class="block">
             <div class="item">
                 <span>订单单号</span>
-                <span>1000001</span>
+                <span>{{ order.orderCode }}</span>
             </div>
             <div class="item">
                 <span>支付方式</span>
-                <span>微信支付</span>
+                <span>{{
+                    order.paymentMethods == 1
+                        ? "微信支付"
+                        : order.paymentMethods == 4
+                        ? "线下支付"
+                        : ""
+                }}</span>
             </div>
             <div class="item">
                 <span>配送方式</span>
-                <span>快递</span>
+                <span>{{
+                    order.selfCarry == 1
+                        ? "自提"
+                        : order.selfCarry == 2
+                        ? "快递配送"
+                        : "物流到付"
+                }}</span>
             </div>
             <div class="item">
                 <span>下单时间</span>
-                <span>2020-10-20 12:00</span>
+                <span>{{ order.commitTime }}</span>
             </div>
         </div>
 
         <div class="block">
             <div class="item">
                 <span>商品总价</span>
-                <span>￥298</span>
+                <span>￥{{ order.totalAmount }}</span>
             </div>
-            <div class="item">
+            <!-- <div class="item">
                 <span>会员折扣</span>
                 <span>9.9折</span>
-            </div>
+            </div> -->
             <div class="item">
                 <span>运费</span>
-                <span>￥0.00</span>
+                <span>￥{{ order.freightAmount || 0 }}</span>
             </div>
             <div class="item">
                 <span>运费险</span>
-                <span>￥6.00</span>
+                <span>￥0.00</span>
             </div>
-            <div class="item">
+            <!-- <div class="item">
                 <span>店铺优惠</span>
                 <span>-￥10.00</span>
             </div>
             <div class="item">
                 <span>平台优惠</span>
                 <span>-￥10.00</span>
+            </div> -->
+            <div class="total">
+                合计：<span class="red">￥{{ order.paymentAmount }}</span>
             </div>
-            <div class="total">合计：<span class="red">￥316.8</span></div>
         </div>
     </div>
 </template>
 
 <script>
-export default {};
+//0-已取消 1-待付款 2-待发货 3-待收货 4-待评价 5-售后/退款 6-已完成 7-待自提 8-已退款
+import { CountDown } from "vant";
+import api from "../../api/order";
+export default {
+    data() {
+        return {
+            id: this.$route.params.id,
+            order: {},
+            status: [
+                "已取消",
+                "待付款",
+                "待发货",
+                "待收货",
+                "待评价",
+                "售后/退款",
+                "已完成",
+                "待自提",
+                "已退款",
+            ],
+        };
+    },
+    created() {
+        this.init();
+    },
+    methods: {
+        getTime(time) {
+            var t = new Date(time);
+            return t.setDate(t.getDate() + 1) - new Date().getTime();
+        },
+        async init() {
+            let res = await api.getOrderDetail(this.id);
+            this.order = res.result || {};
+        },
+    },
+    components: {
+        CountDown,
+    },
+};
 </script>
 
 <style lang="less" scoped>
@@ -101,6 +189,15 @@ export default {};
         font-size: 0.215rem;
         margin-top: 0.15rem;
         margin-left: 0.25rem;
+        display: flex;
+        align-items: center;
+        line-height: 0.271rem;
+        /deep/ .van-count-down {
+            color: #ffffff;
+            font-size: 0.215rem;
+            line-height: 0.271rem;
+            margin-left: 0.1rem;
+        }
     }
 }
 .products {

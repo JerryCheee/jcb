@@ -25,13 +25,16 @@
                     v-if="item.status == 1"
                     :order="item"
                 >
-                    <span class="count-d">
+                    <span class="count-d" v-if="item.paymentMethods != 4">
                         <span>剩余时间</span>
                         <count-down
                             :time="getTime(item.commitTime)"
                         ></count-down>
                     </span>
-                    <order-btn type="primary">立即支付</order-btn>
+                    <order-btn type="primary" v-if="item.paymentMethods != 4">
+                        立即支付
+                    </order-btn>
+                    <order-btn type="primary" v-else>上传凭证</order-btn>
                 </order-card>
 
                 <!-- 待发货 字蓝 -->
@@ -182,6 +185,11 @@ export default {
     font-size: 0.21rem;
     margin-right: 0.17rem;
     display: flex;
+    line-height: 0.271rem;
     align-items: center;
+    /deep/ .van-count-down {
+        font-size: 0.21rem;
+        line-height: 0.271rem;
+    }
 }
 </style>

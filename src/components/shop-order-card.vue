@@ -1,39 +1,58 @@
 <template>
-    <router-link tag="div" to="/workbench/shop-order/1" class="order-card">
+    <router-link
+        tag="div"
+        :to="`/workbench/shop-order/${order.id}`"
+        class="order-card"
+    >
         <div class="top">
             <div class="shop">
                 <i class="iconfont iconshangcheng"></i>
-                <span class="shop-name">豪迪五金店</span>
+                <span class="shop-name">{{ order.getApiVo.name }}</span>
             </div>
-            <div class="status">已完成</div>
+            <div class="status">{{ status[order.status] }}</div>
         </div>
         <div class="products">
-            <div class="pro" v-for="(pro, i) in 2" :key="i">
+            <div class="pro" v-for="(pro, i) in order.productList" :key="i">
                 <div class="pro-img">
-                    <img src="../assets/img/分类-商品图.png" alt="" />
+                    <img :src="pro.productPic" alt="" />
                 </div>
                 <div class="pro-info">
                     <div class="pro-name e2">
-                        博世 电动工具 3.6V锂电池充电起子 螺丝刀 IXO3
+                        {{ pro.productName }}
                     </div>
-                    <div class="pro-sku">规格:220V &emsp; 颜色:黑色</div>
-                    <div class="pro-num">x1</div>
+                    <div class="pro-sku">{{ pro.propertyName }}</div>
+                    <div class="pro-num">x{{ pro.number }}</div>
                 </div>
             </div>
         </div>
 
         <div class="bottom">
-            <div class="count">共2件</div>
-            <div class="money">合计：<span class="red">￥694</span></div>
+            <div class="count">共{{ order.productNumber }}件</div>
+            <div class="money">
+                合计：<span class="red"> ￥{{ order.totalAmount }} </span>
+            </div>
         </div>
     </router-link>
 </template>
 
 <script>
+//0-已取消 1-待付款 2-待发货 3-待收货 4-待评价 5-售后/退款 6-已完成 7-待自提 8-已退款
 export default {
     props: ["order"],
     data() {
-        return {};
+        return {
+            status: [
+                "已取消",
+                "待付款",
+                "待发货",
+                "待收货",
+                "待评价",
+                "售后/退款",
+                "已完成",
+                "待自提",
+                "已退款",
+            ],
+        };
     },
     methods: {},
     components: {},

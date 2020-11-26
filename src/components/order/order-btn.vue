@@ -31,6 +31,7 @@ export default {
 .btns {
     width: 1.24rem;
     height: 0.51rem;
+    line-height: 0.51rem;
     border-radius: 0.25rem;
     box-sizing: border-box;
     font-size: 0.21rem;

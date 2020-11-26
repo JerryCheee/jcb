@@ -69,7 +69,7 @@
                     </router-link>
                     <router-link
                         tag="div"
-                        to="/workbench/shop-orders/3"
+                        to="/workbench/shop-orders/6"
                         class="common-item"
                     >
                         <i class="iconfont iconyiwancheng green"></i>
@@ -77,7 +77,7 @@
                     </router-link>
                     <router-link
                         tag="div"
-                        to="/workbench/shop-orders/4"
+                        to="/workbench/shop-orders/5"
                         class="common-item"
                     >
                         <i class="iconfont icontuihuoshouhou red"></i>

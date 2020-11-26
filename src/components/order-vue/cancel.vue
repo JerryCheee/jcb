@@ -1,18 +1,10 @@
 <template>
     <div class="wait-consignment-wrap">
-        <top-header status="已取消">
-            <!-- 这里两种 要么超时 要么不显示 -->
-            <span>取消原因:超时未支付</span>
-            <span></span>
-        </top-header>
+        <top-header status="已取消" :order="order"> </top-header>
 
         <div class="content">
-            <!-- 内容区 padding -->
-            <goods-info></goods-info>
-            <!-- 结算 -->
-            <settlement></settlement>
             <!-- 物流信息 -->
-            <other-info cancel></other-info>
+            <other-info cancel :order="order"></other-info>
         </div>
     </div>
 </template>
@@ -23,6 +15,7 @@ import goodsInfo from "../order/goods-info";
 import settlement from "../order/settlement";
 import otherInfo from "../order/other-info";
 export default {
+    props: ["order"],
     data() {
         return {};
     },
