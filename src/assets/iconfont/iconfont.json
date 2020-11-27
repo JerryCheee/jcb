@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1703527",
+      "name": "关闭",
+      "font_class": "guanbi2",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "18475386",
+      "name": "支付宝",
+      "font_class": "zhifubao",
+      "unicode": "e6a5",
+      "unicode_decimal": 59045
+    },
+    {
+      "icon_id": "18475387",
+      "name": "微信",
+      "font_class": "weixin1",
+      "unicode": "e6a6",
+      "unicode_decimal": 59046
+    },
+    {
+      "icon_id": "18475388",
+      "name": "银联",
+      "font_class": "yinlian",
+      "unicode": "e6a7",
+      "unicode_decimal": 59047
+    },
+    {
       "icon_id": "10147101",
       "name": "circle",
       "font_class": "circle",

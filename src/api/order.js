@@ -8,5 +8,7 @@ export default {
     getOrderList: params => req.get('/order/list', { params }),
     cancelOrder: orderId => req.post('/order/cancel?orderId=' + orderId),
     uploadCertificate: params => req.put(`/order/updateVoucher`, params),
-    upload: file => req.post('/oss/upload', file)
+    upload: file => req.post('/oss/upload', file),
+    refund: params => req.post('/order/return', params),
+    addComments: params => req.post('/order/addComments', params)
 }

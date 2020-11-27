@@ -1,50 +1,66 @@
 <template>
     <div class="shopcart-wrap">
-        <empty description="暂无商品" v-if="empty"></empty>
-        <div class="top-control row ac sb" v-if="!empty">
-            <span>购物车({{ shopcartList.length }})</span>
-            <span v-show="mode == 'buy'" @click="mode = 'del'">管理</span>
-            <span v-show="mode == 'del'" @click="mode = 'buy'">完成</span>
-        </div>
-        <div class="shopcart-content">
-            <div class="fs">
-                <shop-card
-                    v-for="(item, i) in shopcartList"
-                    :key="item.storeId"
-                    :info="item"
-                    :ref="refs[i]"
-                    @getData="getData"
-                ></shop-card>
+        <div class="shopcart-content" ref="container">
+            <empty description="暂无商品" v-if="!list.length"></empty>
+            <Sticky v-if="list.length" :container="container">
+                <div class="top-control row ac sb">
+                    <span>购物车({{ list.length }})</span>
+                    <span @click="isEdit = !isEdit">{{
+                        isEdit ? "完成" : "管理"
+                    }}</span>
+                </div>
+            </Sticky>
+
+            <div class="content">
+                <checkbox-group v-model="result" ref="checkboxGroup">
+                    <div
+                        class="goods-card"
+                        v-for="(item, index) in list"
+                        :key="index"
+                    >
+                        <checkbox
+                            :name="item.cartId"
+                            checked-color="#2ecb62"
+                            :label-disabled="true"
+                        >
+                            <ShopCartCard
+                                :goods="item"
+                                @changeNum="changeNum"
+                            />
+                        </checkbox>
+                    </div>
+                </checkbox-group>
             </div>
-            <!-- 推荐产品 -->
-
-            <h3 class="title fs">推荐产品</h3>
-            <RecommendGoods />
         </div>
 
+        <div class="recommend">
+            <!-- 推荐产品 -->
+            <h3 class="content title">推荐产品</h3>
+            <div>
+                <RecommendGoods />
+            </div>
+        </div>
         <!-- 购物车底部 -->
         <div class="shop-bar row sb ac">
-            <div class="select-all row ac">
-                <radio-one
-                    v-model="isSelectAll"
-                    @click.native="selectAll"
-                ></radio-one>
+            <div class="select-all row ac" @click="toggleAll">
+                <i class="iconfont iconxuanzhong" v-if="isSelectAll"></i>
+                <div class="circle" v-else></div>
                 <span>全选</span>
             </div>
-            <div class="buy-info row ac" v-show="mode == 'buy'">
+            <div class="buy-info row ac" v-if="!isEdit">
                 <div class="info column">
                     <span>
                         合计:
-                        <span class="price">￥{{ totalPirce.toFixed(2) }}</span>
+                        <span class="price">
+                            ￥{{ totalPrice.toFixed(2) }}
+                        </span>
                     </span>
-                    <span class="total">共计{{ quantity }}个商品</span>
+                    <span class="total">共计{{ totalCount }}个商品</span>
                 </div>
                 <div class="btn-buy row ac jc" @click="buyNow">立即购买</div>
             </div>
-            <div class="buy-info row ac" v-show="mode == 'del'">
-                <div class="btn-buy del row ac jc" @click="delShopcartGoods">
-                    删除
-                </div>
+            <div class="buy-info row ac" v-else>
+                <div class="del-btn" @click="delShopcartGoods">删除</div>
             </div>
         </div>
         <my-footer></my-footer>
@@ -52,87 +68,51 @@
 </template>
 
 <script>
-import productApi from "../../api/product";
+import MyFooter from "../../components/footer";
+import ShopCartCard from "../../components/shopcart-card";
+import RecommendGoods from "../../components/recommend-goods";
+import { Checkbox, CheckboxGroup, Empty, Toast, Dialog, Sticky } from "vant";
 import api from "../../api/shopcart";
 import orderApi from "../../api/order";
-import { Empty, Toast, Dialog } from "vant";
-import MyFooter from "../../components/footer";
-import ShopCard from "../../components/shopcart-card";
-import RecommendGoods from "../../components/recommend-goods";
-import waterFall from "../../components/waterfall";
-import radioOne from "../../components/radio-one";
 export default {
+    name: "shoppingCar",
     data() {
         return {
-            empty: false,
             isSelectAll: false,
-            shopcartList: [], //购物车列表
-            totalNum: 1, //总商品数 判断是否全选
-            quantity: 0, //选中数量
-            totalPirce: 0, //总价
-            refs: [], //全选用的
-            chooseData: [], //购物车选中的数据 算钱！ :(
-            mode: "buy", //是购买还是删除 -> buy / del
-            goodsList: [],
-            goodsParams: { type: 2 },
+            isEdit: false,
+            result: [],
+            list: [],
+            totalCount: 0,
+            totalPrice: 0,
+            container: null,
+            originalData: [],
         };
     },
+    mounted() {
+        this.init();
+        this.container = this.$refs.container;
+    },
     methods: {
-        async getShopcartList() {
+        toggleAll() {
+            this.$refs.checkboxGroup.toggleAll(!this.isSelectAll);
+        },
+        async init() {
             let res = await api.getList({ shopType: 2 });
-            this.shopcartList = res.result;
-            // res.result = []
-            //给每一个卡片一个ref值
-            this.refs.push(...this.shopcartList.map((v) => v.storeId));
-            if (res.result.length == 0) this.empty = true;
-            //获取购物车总商品数(仅有效商品)
-            let s = [];
-            this.shopcartList.map((v) =>
-                s.push(...v.productVoList.filter((s) => s.state == 1))
-            );
-            this.totalNum = s.length;
+            this.originalData = res.result || [];
+            this.list = res.result
+                .map((a) => a.productVoList)
+                .reduce((a, b) => a.concat(b));
         },
-        selectAll() {
-            //全选商品
-            this.refs.forEach((v) => {
-                //console.log('index -> '+this.isSelectAll)
-                this.$refs[v][0].checkAll = this.isSelectAll;
-                this.$refs[v][0].chooseAll();
+        changeNum({ num, id }) {
+            this.list.find((a, b) => a.cartId == id).count = num;
+            this.originalData.forEach((a) => {
+                var m = a.productVoList.find((a, b) => a.cartId == id);
+                if (m) m.count = num;
             });
-            //console.log(this.$refs)
-        },
-        //推荐商品
-        handleFetchResult(result) {
-            this.goodsList = [...this.goodsList, ...result.lists];
-        },
-        getData(obj) {
-            //获取购物车的勾选数据
-            let storeId = obj.storeId;
-            let index = this.chooseData.findIndex((v) => v.storeId == storeId);
-            if (index == -1) {
-                this.chooseData.push(obj);
-            } else {
-                this.chooseData[index].productVoList = obj.productVoList;
-            }
-            //计算总数量
-            let num = this.chooseData.map((v) => v.productVoList.length);
-            this.quantity = num.reduce((pre, cur) => pre + cur);
-            //判断是否全选了商品
-            //this.totalNum == this.quantity? this.isSelectAll=true:this.isSelectAll=false
-            //计算总价格
-            let list = [];
-            this.chooseData.map((v) => list.push(...v.productVoList));
-            this.totalPirce = list.reduce(
-                (pre, cur) => (cur.price * 100 * cur.count) / 100 + pre,
-                0
-            );
+            this.getTotal();
         },
         async delShopcartGoods() {
-            let list = [];
-            this.chooseData.map((v) => {
-                list.push(...v.productVoList);
-            });
-            if (list.length == 0) {
+            if (this.result.length == 0) {
                 Toast("请勾选需要删除的商品!");
                 return;
             }
@@ -142,11 +122,14 @@ export default {
                 confirmButtonColor: "#2ecb62",
             })
                 .then(async () => {
-                    // on confirm
-                    let ids = list.map((v) => v.cartId).join(",");
+                    let ids = this.result.join(",");
                     let res = await api.delGoods({ id: ids });
                     if (res.success) {
-                        this.getShopcartList();
+                        this.init();
+                        this.isEdit = false;
+                        this.result = [];
+                        this.totalCount = 0;
+                        this.totalPrice = 0;
                     } else {
                         Toast("删除商品失败！");
                     }
@@ -157,49 +140,61 @@ export default {
         },
         //立即购买
         async buyNow() {
-            if (this.quantity == 0) return Toast("请最少选择一个商品！");
-            let data = this.chooseData
+            if (this.result.length == 0) return Toast("请最少选择一个商品！");
+            let data = this.originalData
                 .map((o) => o.productVoList)
-                .map((v, i) => {
+                .map((v) => {
                     return {
-                        productList: v.map((m) => {
-                            return {
-                                productId: m.productId,
-                                number: m.count,
-                                skuPrice: m.price,
-                                skuId: m.skuId,
-                                templateId: m.templateId,
-                            };
-                        }),
+                        productList: v
+                            .filter((a) => this.result.includes(a.cartId))
+                            .map((m) => {
+                                return {
+                                    productId: m.productId,
+                                    number: m.count,
+                                    skuPrice: m.price,
+                                    skuId: m.skuId,
+                                    templateId: m.templateId,
+                                };
+                            }),
                         sourceType: 2,
                         sourceId: this.$store.state.user.storeId,
                     };
-                });
+                })
+                .filter((a) => a.productList.length);
             let res = await orderApi.addStoreOrder(data);
             if (!res.success) return Toast(res.message);
             this.$router.push({ path: "/order/confirm/" + res.result });
         },
-    },
-    watch: {
-        quantity(n) {
-            if (n == this.totalNum) {
-                this.isSelectAll = true;
-            } else {
-                this.isSelectAll = false;
-            }
+        getTotal() {
+            var totalCount = 0,
+                totalPrice = 0;
+            this.list.forEach((m) => {
+                if (this.result.includes(m.cartId)) {
+                    totalCount += m.count;
+                    totalPrice += m.price * m.count;
+                }
+            });
+            this.totalCount = totalCount;
+            this.totalPrice = totalPrice;
         },
     },
-    created() {
-        this.getShopcartList();
+    watch: {
+        result(v) {
+            // console.log(v);
+            this.isSelectAll = v.length == this.list.length;
+            this.getTotal();
+        },
     },
     components: {
         MyFooter,
+        ShopCartCard,
         RecommendGoods,
-        ShopCard,
-        waterFall,
+        Checkbox,
+        CheckboxGroup,
         Empty,
-        radioOne,
-        [Dialog.Component.name]: Dialog.Component,
+        Toast,
+        Dialog,
+        Sticky,
     },
 };
 </script>
@@ -221,9 +216,8 @@ h3 {
     flex-shrink: 0;
 }
 .shopcart-wrap {
-    height: 100vh;
     background-color: #f6f6f6;
-    overflow: auto;
+    padding-bottom: 1.7rem;
     .top-control {
         height: 0.75rem;
         background-color: #ffffff;
@@ -235,9 +229,16 @@ h3 {
     }
 }
 .shopcart-content {
-    padding: 0.23rem 0 1.66rem 0;
-    .fs {
+    padding-bottom: 0.23rem;
+    .content {
         padding: 0 0.27rem;
+        margin-top: 0.27rem;
+        .goods-card {
+            background-color: #ffffff;
+            border-radius: 0.11rem;
+            padding: 0.2rem 0.23rem;
+            margin-bottom: 0.23rem;
+        }
     }
     .title {
         margin-top: 0.45rem;
@@ -278,6 +279,17 @@ h3 {
             font-size: 0.2rem;
             text-align: right;
         }
+        .del-btn {
+            width: 1.469rem;
+            height: 0.565rem;
+            border-radius: 0.282rem;
+            border: solid 0.006rem #1a1a1a;
+            text-align: center;
+            line-height: 0.565rem;
+            text-align: center;
+            font-size: 0.215rem;
+            color: #1a1a1a;
+        }
     }
     .btn-buy {
         width: 1.47rem;
@@ -286,11 +298,13 @@ h3 {
         border-radius: 0.28rem;
         color: #ffffff;
     }
-    .del {
-        border-radius: 0.28rem;
-        border: solid 0.01rem #1a1a1a;
-        background-color: #ffffff;
-        color: #1a1a1a;
+}
+.recommend {
+    .title {
+        padding: 0 0.27rem;
     }
+}
+/deep/ .van-checkbox__label {
+    flex: 1;
 }
 </style>

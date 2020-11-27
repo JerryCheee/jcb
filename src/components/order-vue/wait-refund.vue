@@ -12,15 +12,11 @@
         </top-header>
 
         <div class="content">
-            <!-- 内容区 padding -->
-            <goods-info></goods-info>
-            <!-- 结算 -->
-            <settlement></settlement>
             <!-- 物流信息 -->
-            <other-info plus></other-info>
+            <other-info plus :order="order"></other-info>
         </div>
         <div class="footer">
-            <order-btn type="primary">撤销退款</order-btn>
+            <order-btn type="primary" @click="cancelRefund">撤销退款</order-btn>
         </div>
     </div>
 </template>
@@ -31,12 +27,25 @@ import GoodsInfo from "../order/goods-info";
 import Settlement from "../order/settlement";
 import OtherInfo from "../order/other-info";
 import OrderBtn from "../order/order-btn";
-import { CountDown } from "vant";
+import { CountDown, Dialog } from "vant";
 export default {
     data() {
         return {};
     },
-    methods: {},
+    methods: {
+        cancelRefund() {
+            Dialog.confirm({
+                title: "提示",
+                message: "确定撤销退款吗？",
+            })
+                .then(() => {
+                    // on confirm
+                })
+                .catch(() => {
+                    // on cancel
+                });
+        },
+    },
     components: {
         TopHeader,
         GoodsInfo,
@@ -44,6 +53,7 @@ export default {
         OtherInfo,
         OrderBtn,
         CountDown,
+        [Dialog.Component.name]: Dialog.Component,
     },
 };
 </script>
@@ -65,9 +75,13 @@ export default {
     position: fixed;
     left: 0;
     bottom: 0;
-    width: 100%;
+    padding: 0 0.27rem;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    width: -webkit-fill-available;
+    > div {
+        margin-left: 0.169rem;
+    }
 }
 </style>

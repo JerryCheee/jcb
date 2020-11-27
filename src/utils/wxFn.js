@@ -87,7 +87,8 @@ const initShareConfig = function(e = {}) {
  */
 export const invokeWxPay = (c) => {
     //坑--》 chooseWXPay接受对象 timestamp s小写
-    let e = {...c, timestamp: c.timeStamp, signType: 'MD5' }
+    // let e = {...c, timestamp: c.timeStamp, signType: 'MD5' }
+    let e = {...c, timestamp: c.timeStamp, signType: 'MD5', 'package': c.packageValue }
     wx.chooseWXPay(e)
 }
 

@@ -88,15 +88,15 @@
                                     v-model="contact"
                                     v-show="editPhone"
                                     @blur="checkPhone"
-                                    placeholder="13888888888"
+                                    placeholder=""
                                 />
                                 <div class="row" v-show="!editPhone">
-                                    {{ contact || "13888888888" }}
+                                    {{ contact }}
                                     <i class="iconfont iconbianji"></i>
                                 </div>
                             </div>
                         </div>
-                        <div class="rule row ac">
+                        <!-- <div class="rule row ac">
                             <div
                                 class="checkbox row ac"
                                 @click="agreement = !agreement"
@@ -109,7 +109,7 @@
                             </div>
                             同意
                             <span class="agreement">《到店自取服务协议》</span>
-                        </div>
+                        </div> -->
                     </div>
                     <!-- <i class="iconfont iconARROW r"></i> -->
                 </div>
@@ -257,9 +257,34 @@
         <div class="tabbar row sb ac">
             <div class="left row ac">
                 <span class="word">合计:</span>
-                <span class="money">￥316.8</span>
+                <span class="money">￥{{ totalPrice }}</span>
             </div>
             <div class="buy-btn row ac jc" @click="pay">立即购买</div>
+        </div>
+
+        <div class="pop-ewm" v-if="showEwm">
+            <div class="box" id="save-code">
+                <i class="iconfont iconguanbi2" @click="goOrderDetail"></i>
+                <div class="title">
+                    <span>支付金额：</span
+                    ><span class="red">￥{{ totalPrice }}</span>
+                </div>
+                <div class="store">豪迪五金建材店</div>
+                <img src="../../assets/img/payewm.png" alt="" />
+                <div class="des">
+                    <p>请扫描支付码，支付完成后</p>
+                    <p>请到我的订单上传凭证以便客服审核发货！</p>
+                </div>
+                <div class="icon-title">支持以下付款</div>
+                <div class="icons">
+                    <div>
+                        <img src="../../assets/img/wx.png" alt="" />
+                        <img src="../../assets/img/zfb.png" alt="" />
+                        <img src="../../assets/img/yl.png" alt="" />
+                    </div>
+                </div>
+            </div>
+            <div class="btn" @click="saveImg">保存支付码</div>
         </div>
 
         <!-- 又是一堆弹框 x_x -->
@@ -415,9 +440,12 @@ import {
 } from "vant";
 import api from "../../api/order";
 import userApi from "../../api/user";
+import html2canvas from "html2canvas";
+import wxFn from "../../utils/wxFn";
 export default {
     data() {
         return {
+            showEwm: false,
             orderno: this.$route.params.id,
             orderInfo: [],
             address: {},
@@ -429,7 +457,8 @@ export default {
             dateList: [], //日期
             dayIdx: 0, //选中的日期索引
             contact: "", // 联系电话
-            deliverWay: ["快递配送", "物流到付"],
+            // deliverWay: ["快递配送", "物流到付"],
+            deliverWay: ["物流到付"],
             form: {
                 shopIdx: -1, //店铺优惠券索引
                 deliverWayIdx: 0, //配送方式 两种
@@ -520,8 +549,8 @@ export default {
         async pay() {
             if (this.wayIdx) {
                 if (!this.contact) return Toast("请填写联系电话!");
-                if (!this.agreement)
-                    return Toast("请先阅读并同意到点自取服务协议！");
+                // if (!this.agreement)
+                //     return Toast("请先阅读并同意到点自取服务协议！");
             }
 
             if (!this.wayIdx) {
@@ -550,12 +579,37 @@ export default {
                 paymentMethods:
                     this.payType == 1 ? 1 : this.payType == 2 ? 4 : 3, //支付方式(1-微信支付 2-支付宝支付 3-集采分支付 4-线下支付)
                 receiveAddressId: this.wayIdx == 0 ? this.address.id : 0, //收货地址
-                selfCarry: this.wayIdx ? 1 : this.form.deliverWayIdx ? 3 : 2, //配送方式(配送类型 1-买家自提 2-快递配送 3-物流到付
+                // selfCarry: this.wayIdx ? 1 : this.form.deliverWayIdx ? 3 : 2, //配送方式(配送类型 1-买家自提 2-快递配送 3-物流到付
+                selfCarry: this.wayIdx ? 1 : 3, //配送方式(配送类型 1-买家自提 2-快递配送 3-物流到付
                 selfPhone: this.wayIdx ? this.contact : "", //自提预留手机号
                 selfTime: this.wayIdx ? this.getSelfTime() : "", //自提时间
             };
 
             let res = await api.pay(params);
+
+            if (res.success) {
+                if (this.payType == 2) {
+                    this.showEwm = true;
+                } else {
+                    wxFn.invokeWxPay({
+                        ...res.result,
+                        success: (e) => {
+                            console.log(e);
+                            this.$router.replace("/order");
+                        },
+                        cancel: (e) => {
+                            console.log(e);
+                            Toast(e);
+                        },
+                        fail: (e) => {
+                            console.log(e);
+                            Toast(e);
+                        },
+                    });
+                }
+            } else {
+                Toast(ress.message);
+            }
         },
         getTimeList() {
             let openHours = "2020-11-22 08:30:00";
@@ -582,9 +636,61 @@ export default {
             } ${this.options[this.opIdx]}:00`;
             return timeStr;
         },
+        saveImg() {
+            // HTML转canvas
+            html2canvas(document.querySelector("#save-code"), {
+                useCORS: true,
+            }).then((canvas) => {
+                // $("#save-code").css("display", "none"); // 隐藏目标HTML页面
+                this.convertCanvasToImg(canvas); // canvas转图片
+            });
+        },
+        convertCanvasToImg(canvas) {
+            // canvas转base64 转 blob
+            var myBlob = this.dataURLtoBlob(canvas.toDataURL("img/png", 0.92));
+            //blob转URL对象
+            var myUrl = URL.createObjectURL(myBlob);
+            // 创建a标签，下载图片
+            this.downImg(myUrl);
+        },
+        dataURLtoBlob(dataurl) {
+            var arr = dataurl.split(","),
+                mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]),
+                n = bstr.length,
+                u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+        },
+        downImg(url) {
+            // 创建a标签 并设置其相关属性，最后触发其点击事件
+            let a = document.createElement("a");
+            let clickEvent = document.createEvent("MouseEvents");
+            a.setAttribute("href", url);
+            a.setAttribute("download", "codeImg");
+            a.setAttribute("target", "_blank");
+            clickEvent.initEvent("click", true, true);
+            a.dispatchEvent(clickEvent);
+        },
+        goOrderDetail() {
+            this.showEwm = false;
+            this.$router.replace("/order");
+        },
     },
     mounted() {
         this.getMonthDay();
+    },
+    computed: {
+        totalPrice() {
+            return this.orderInfo
+                .map((o) => o.productList)
+                .reduce((a, b) => a.concat(b), [])
+                .map((a) => a.skuPrice * a.number)
+                .reduce((m, n) => m + n, 0)
+                .toFixed(2);
+        },
     },
     components: {
         ActionSheet,
@@ -984,9 +1090,7 @@ export default {
         color: #ffffff;
     }
 }
-</style>
 
-<style lang="less" scoped>
 .confirm-btn {
     width: 5.81rem;
     height: 0.56rem;
@@ -1238,5 +1342,82 @@ export default {
 }
 /deep/ .van-stepper {
     display: flex;
+}
+
+.pop-ewm {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .box {
+        width: 5.085rem;
+        height: 7.401rem;
+        background-color: #f6f6f6;
+        border-radius: 0.1rem;
+        text-align: center;
+        .iconguanbi2 {
+            position: relative;
+            top: -0.6rem;
+            // left: 2.16rem;
+            font-size: 0.47rem;
+            color: #ffffff;
+        }
+        .title {
+            color: #1a1a1a;
+            font-size: 0.271rem;
+            font-weight: bold;
+        }
+        .store {
+            color: #a8a8a8;
+            font-size: 0.215rem;
+            margin: 0.15rem 0 0.45rem 0;
+        }
+        img {
+            width: 3.277rem;
+            height: 3.277rem;
+            display: block;
+            margin: 0 auto;
+        }
+        .des {
+            color: #a8a8a8;
+            font-size: 0.181rem;
+            line-height: 0.271rem;
+            margin: 0.2rem 0 0.3rem 0;
+        }
+        .icon-title {
+            color: #1a1a1a;
+            font-size: 0.181rem;
+            margin-bottom: 0.2rem;
+        }
+        .icons {
+            div {
+                margin: 0 auto;
+                display: flex;
+                width: 3rem;
+                img {
+                    width: auto;
+                    height: 0.52rem;
+                }
+            }
+        }
+    }
+    .btn {
+        width: 5.085rem;
+        height: 0.734rem;
+        background-color: #2ecb62;
+        border-radius: 0.367rem;
+        color: #f6f6f6;
+        font-size: 0.215rem;
+        text-align: center;
+        line-height: 0.734rem;
+        margin-top: 0.339rem;
+    }
 }
 </style>

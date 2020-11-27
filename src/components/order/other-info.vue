@@ -34,15 +34,18 @@
                         : "物流到付"
                 }}</span>
             </div>
-            <div class="other-feild row sb ac" v-if="plus || cancel || all">
+            <!-- <div class="other-feild row sb ac" v-if="plus || cancel || all">
                 <span>物流单号</span>
                 <span>SF493772984929 <span class="copy">复制</span></span>
-            </div>
+            </div> -->
             <div class="other-feild row sb ac">
                 <span>下单时间</span>
                 <span>{{ order.commitTime }}</span>
             </div>
-            <div class="other-feild row sb ac" v-if="plus || cancel || all">
+            <div
+                class="other-feild row sb ac"
+                v-if="(plus || cancel || all) && order.deliveryTime"
+            >
                 <span>发货时间</span>
                 <span>{{ order.deliveryTime }}</span>
             </div>
@@ -50,7 +53,7 @@
                 <span>退货时间</span>
                 <span>2020-10-20 12:00</span>
             </div>
-            <div class="other-feild row sb ac" v-if="all">
+            <div class="other-feild row sb ac" v-if="all && order.receiveTime">
                 <span>收货时间</span>
                 <span>{{ order.receiveTime }}</span>
             </div>

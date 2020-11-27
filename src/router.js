@@ -258,6 +258,13 @@ export default new Router({
             component: () =>
                 import ('@/views/order/refund/money')
         },
+        {
+            path: '/order/evaluate',
+            name: 'evaluate',
+            meta: { title: '评价' },
+            component: () =>
+                import ('@/views/order/evaluate')
+        },
     ],
     linkActiveClass: 'tabbar-active'
 })

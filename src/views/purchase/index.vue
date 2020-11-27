@@ -208,35 +208,12 @@
         <!-- 新品推荐/热销排行榜/智能推荐 -->
         <div class="pro-box">
             <tabs v-model="active" swipeable animated line-width="0">
-                <tab title="新品推荐">
-                    <list
-                        v-model="loading"
-                        :finished="finished"
-                        finished-text="没有更多了"
-                        @load="getSupHomeList"
-                    >
-                        <GoodsList :goods_list="goodsList" />
-                    </list>
-                </tab>
-                <tab title="热销排行榜">
-                    <list
-                        v-model="loading"
-                        :finished="finished"
-                        finished-text="没有更多了"
-                        @load="getSupHomeList"
-                    >
-                        <GoodsList :goods_list="goodsList" />
-                    </list>
-                </tab>
-                <tab title="智能推荐">
-                    <list
-                        v-model="loading"
-                        :finished="finished"
-                        finished-text="没有更多了"
-                        @load="getSupHomeList"
-                    >
-                        <GoodsList :goods_list="goodsList" />
-                    </list>
+                <tab
+                    title="新品推荐"
+                    v-for="(item, index) in proTabs"
+                    :key="index"
+                >
+                    <IndexProList :type="active + 1" />
                 </tab>
             </tabs>
         </div>
@@ -258,7 +235,7 @@ import {
 } from "vant";
 import myFooter from "../../components/footer";
 import searchTop from "../../components/search-top";
-import GoodsList from "../../components/goods-card";
+import IndexProList from "../../components/index-pro-list";
 import api from "../../api/product";
 import indexApi from "../../api/index";
 export default {
@@ -277,8 +254,7 @@ export default {
             },
             active: 1,
             reconBrandList: [],
-            goodsParams: { pageNo: 1, pageSize: 10, type: 2 },
-            goodsList: [],
+            proTabs: ["新品推荐", "热销排行榜", "智能推荐"],
         };
     },
     created() {
@@ -286,14 +262,6 @@ export default {
         this.getNotice();
         this.getAllClassifyList();
         this.getRecomBrand();
-    },
-    watch: {
-        active(v) {
-            this.goodsList = [];
-            this.finished = false;
-            this.goodsParams.type = v + 1;
-            this.goodsParams.pageNo = 1;
-        },
     },
     methods: {
         async getBanner() {
@@ -326,28 +294,6 @@ export default {
             }
             return newArr;
         },
-        async getSupHomeList() {
-            this.loading = true;
-            var timer = setTimeout(async () => {
-                clearTimeout(timer);
-                let res = await api.getSupHomeList(this.goodsParams);
-                this.loading = false;
-                if (
-                    !res.success ||
-                    !res.result ||
-                    res.result.lists.length == 0
-                ) {
-                    this.finished = true;
-                } else {
-                    this.goodsList = [...this.goodsList, ...res.result.lists];
-                }
-                if (!res.success) {
-                    Toast("获取商品失败!");
-                    return;
-                }
-                this.goodsParams.pageNo++;
-            }, 1000);
-        },
     },
     components: {
         Swipe,
@@ -357,7 +303,7 @@ export default {
         Tab,
         Tabs,
         myFooter,
-        GoodsList,
+        IndexProList,
         List,
         NoticeBar,
     },
@@ -394,6 +340,7 @@ export default {
         margin: 0.226rem auto 0 auto;
         display: flex;
         align-items: center;
+        overflow: hidden;
         img {
             width: 1.062rem;
             height: 0.203rem;
@@ -774,6 +721,9 @@ export default {
         color: #ffffff;
         font-size: 0.203rem;
         padding: 0 0.1rem;
+    }
+    /deep/ .van-tab__pane-wrapper {
+        min-height: 80vh;
     }
 }
 </style>

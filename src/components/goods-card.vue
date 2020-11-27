@@ -11,7 +11,9 @@
             <div class="name e2">{{ item.productName }}</div>
             <div class="info">
                 <div class="price">
-                    <span class="new" v-if="item.purchasePrice">￥{{ item.purchasePrice.toFixed(2) }}</span>
+                    <span class="new" v-if="item.purchasePrice"
+                        >￥{{ item.purchasePrice.toFixed(2) }}</span
+                    >
                     <!-- <span class="old">￥{{ item.advicePrice }}</span> -->
                 </div>
                 <div class="count">销量:{{ item.saleCount }}</div>
@@ -22,7 +24,7 @@
 
 <script>
 export default {
-    props: ["goods_list"]
+    props: ["goods_list"],
 };
 </script>
 

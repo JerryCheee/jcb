@@ -13,4 +13,5 @@ export default {
     geographic: params => req.get('/geographic/options', { params }),
     getCollectList: params => req.post('/memberSubApi/listCollectCommodity', params),
     getMemberSourceList: (params) => req.get('/popularize/memberSourceList', { params }),
+    getPopularize: id => req.get('/popularize/statistics?memberId=' + id),
 }

@@ -58,7 +58,9 @@
                     >
                         <i class="iconfont icondaizhifu yellow"></i>
                         <span>待支付</span>
+                        <!-- <span class="badge">5</span> -->
                     </router-link>
+
                     <router-link
                         tag="div"
                         to="/workbench/shop-orders/2"
@@ -66,6 +68,7 @@
                     >
                         <i class="iconfont icondaishouhuo blue"></i>
                         <span>待收货</span>
+                        <!-- <span class="badge">5</span> -->
                     </router-link>
                     <router-link
                         tag="div"
@@ -74,6 +77,7 @@
                     >
                         <i class="iconfont iconyiwancheng green"></i>
                         <span>已完成</span>
+                        <!-- <span class="badge">5</span> -->
                     </router-link>
                     <router-link
                         tag="div"
@@ -82,6 +86,7 @@
                     >
                         <i class="iconfont icontuihuoshouhou red"></i>
                         <span>退货售后</span>
+                        <!-- <span class="badge">5</span> -->
                     </router-link>
                 </div>
             </div>
@@ -188,7 +193,6 @@ import myFooter from "../../components/footer";
 import api from "../../api/user";
 import { Toast } from "vant";
 export default {
-    name: "mine",
     data() {
         return {
             storeInfo: {},
@@ -244,6 +248,7 @@ export default {
         align-items: center;
         justify-content: space-between;
         .common-item {
+            position: relative;
             margin-top: 0.27rem;
             display: flex;
             flex-direction: column;
@@ -255,6 +260,25 @@ export default {
             span {
                 font-size: 0.24rem;
                 margin-top: 0.1rem;
+            }
+            .badge {
+                position: absolute;
+                transform: translateX(50%);
+                top: -0.2rem;
+                right: 0.1rem;
+                height: 0.3rem;
+                border-radius: 0.2rem;
+                width: 0.3rem;
+                background: #fc0808;
+                color: #fff;
+                line-height: 0.3rem;
+                text-align: center;
+                padding: 0 0.1rem;
+                font-size: 0.181rem;
+                white-space: nowrap;
+                z-index: 10;
+                box-shadow: 0 0 0 1px #fff;
+                box-sizing: border-box;
             }
         }
         .info-item {

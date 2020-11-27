@@ -1,21 +1,20 @@
 <template>
     <div class="wait-consignment-wrap">
-        <top-header status="待收货">
-            <span>商家已发货，等待送货上门</span>
-        </top-header>
+        <top-header status="待收货" :order="order" />
 
         <div class="content">
-            <!-- 内容区 padding -->
-            <goods-info></goods-info>
-            <!-- 结算 -->
-            <settlement></settlement>
             <!-- 物流信息 -->
-            <other-info plus></other-info>
+            <other-info plus :order="order"></other-info>
         </div>
         <div class="footer">
-            <order-btn type="plain">查看物流</order-btn>
-            <order-btn type="plain">申请退款</order-btn>
-            <order-btn type="primary">确认收货</order-btn>
+            <!-- <order-btn type="plain">查看物流</order-btn> -->
+            <order-btn
+                type="plain"
+                @click="$router.push(`/refund/money?id=${order.id}`)"
+            >
+                申请退款
+            </order-btn>
+            <order-btn type="primary" @click="receive">确认收货</order-btn>
         </div>
     </div>
 </template>
@@ -26,11 +25,27 @@ import goodsInfo from "../order/goods-info";
 import settlement from "../order/settlement";
 import otherInfo from "../order/other-info";
 import orderBtn from "../order/order-btn";
+import { Dialog } from "vant";
+import api from "../../api/order";
 export default {
+    props: ["order"],
     data() {
         return {};
     },
-    methods: {},
+    methods: {
+        receive() {
+            Dialog.confirm({
+                title: "提示",
+                message: "确定收货吗？",
+            })
+                .then(async () => {
+                    // on confirm
+                })
+                .catch(() => {
+                    // on cancel
+                });
+        },
+    },
     components: {
         topHeader,
         goodsInfo,
@@ -58,9 +73,13 @@ export default {
     position: fixed;
     left: 0;
     bottom: 0;
-    width: 100%;
+    padding: 0 0.27rem;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    width: -webkit-fill-available;
+    > div {
+        margin-left: 0.169rem;
+    }
 }
 </style>

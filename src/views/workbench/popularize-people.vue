@@ -22,24 +22,23 @@
                         @load="onLoad"
                     >
                         <div class="list">
-                            <div class="item" v-for="(v, i) in 8" :key="i">
+                            <div class="item" v-for="(v, i) in list" :key="i">
                                 <div class="left">
-                                    <img
-                                        src="../../assets/img/个人中心头像.png"
-                                        alt=""
-                                    />
+                                    <img :src="v.head" />
                                     <div class="info">
-                                        <div class="name">店铺名称</div>
+                                        <div class="name">{{ v.name }}</div>
                                         <div class="time">
-                                            邀请人:一级用户名称
+                                            邀请人:{{ v.sourceName || "" }}
                                         </div>
-                                        <div class="time">2020-10-30</div>
+                                        <div class="time">
+                                            {{ v.sourceTime || "2020-10-30" }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="right">
-                                    <span>0人</span>
-                                    <span>0单</span>
-                                    <span>0元</span>
+                                    <span>{{ v.peopleNumber }}人</span>
+                                    <span>{{ v.orderNumber }}单</span>
+                                    <span>{{ v.profitAmount }}元</span>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +50,8 @@
 </template>
 
 <script>
-import { Tab, Tabs, List } from "vant";
+import { Tab, Tabs, List, Toast } from "vant";
+import api from "../../api/user";
 export default {
     data() {
         return {
@@ -59,13 +59,42 @@ export default {
             finished: false,
             active: 0,
             tabs: ["店铺", "一级", "二级"],
+            params: {
+                pageNo: 1,
+                pageSize: 10,
+                sourceType: 1,
+                memberId: this.$store.state.userId,
+            },
+            list: [],
         };
     },
     methods: {
         onLoad() {
-            setTimeout(() => {
-                this.finished = true;
-            }, 1500);
+            this.loading = true;
+            var timer = setTimeout(async () => {
+                clearTimeout(timer);
+                let res = await api.getMemberSourceList(this.params);
+                this.loading = false;
+                if (
+                    !res.success ||
+                    !res.result ||
+                    res.result.records.length == 0
+                ) {
+                    this.finished = true;
+                } else {
+                    this.list = [...this.list, ...res.result.records];
+                }
+                if (!res.success) {
+                    Toast("获取数据失败!");
+                    return;
+                }
+                this.params.pageNo++;
+            }, 500);
+        },
+    },
+    watch: {
+        active(v) {
+            this.params.sourceType++;
         },
     },
     components: {
@@ -102,6 +131,9 @@ export default {
         /deep/ .van-tab--active {
             font-weight: bold;
         }
+        /deep/ .van-tab__pane-wrapper {
+            min-height: 80vh;
+        }
         .list {
             .item {
                 display: flex;
@@ -135,6 +167,7 @@ export default {
                     flex-direction: column;
                     justify-content: center;
                     font-size: 0.203rem;
+                    text-align: right;
                     span {
                         line-height: 0.32rem;
                     }

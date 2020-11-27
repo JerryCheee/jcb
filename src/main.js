@@ -17,7 +17,7 @@ Vue.use(VueScroller)
 Vue.use(VueClipboard)
 Vue.use(AwesomePicker);
 Vue.use(Dialog)
-Date.prototype.format = function (format) {
+Date.prototype.format = function(format) {
     var o = {
         "M+": this.getMonth() + 1, //month
         "d+": this.getDate(), //day
@@ -33,7 +33,7 @@ Date.prototype.format = function (format) {
         if (new RegExp("(" + k + ")").test(format))
             format = format.replace(RegExp.$1,
                 RegExp.$1.length == 1 ? o[k] :
-                    ("00" + o[k]).substr(("" + o[k]).length));
+                ("00" + o[k]).substr(("" + o[k]).length));
     return format;
 }
 
@@ -46,7 +46,7 @@ router.beforeEach((to, from, next) => {
         document.title = to.meta.title;
     }
     //定时循环回到顶部
-    let scrollToptimer = setInterval(function () {
+    let scrollToptimer = setInterval(function() {
         // console.log("定时循环回到顶部")
         var top = document.body.scrollTop || document.documentElement.scrollTop;
         var speed = top / 4;

@@ -1,19 +1,18 @@
 <template>
     <div class="complete-wrap">
-        <top-header status="交易成功">
-            <span></span>
-        </top-header>
+        <top-header status="交易成功" :order="order" />
 
         <div class="content">
-            <!-- 内容区 padding -->
-            <goods-info></goods-info>
-            <!-- 结算 -->
-            <settlement></settlement>
             <!-- 物流信息 -->
-            <other-info all></other-info>
+            <other-info all :order="order"></other-info>
         </div>
         <div class="footer">
-            <order-btn type="plain">去评价</order-btn>
+            <order-btn
+                type="plain"
+                @click="$router.push(`/order/evaluate?id=${order.id}`)"
+            >
+                去评价
+            </order-btn>
         </div>
     </div>
 </template>
@@ -24,7 +23,9 @@ import goodsInfo from "../order/goods-info";
 import settlement from "../order/settlement";
 import otherInfo from "../order/other-info";
 import orderBtn from "../order/order-btn";
+import { Dialog } from "vant";
 export default {
+    props: ["order"],
     data() {
         return {};
     },

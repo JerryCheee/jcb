@@ -14,7 +14,7 @@
         <!-- 取货码 -->
         <div class="content-wrap">
             <div class="qr-wrap column ac">
-                <span class="shop-name">豪迪五金店取货码</span>
+                <span class="shop-name">取货码</span>
                 <img src="../../assets/img/取货码.png" alt="" class="take-qr" />
                 <div class="take-number">取货码：860438</div>
                 <div class="tip">
@@ -69,7 +69,21 @@
 </template>
 
 <script>
-export default {};
+export default {
+    data() {
+        return {
+            id: this.$route.query.id,
+        };
+    },
+    created() {
+        this.$store.dispatch("getOrderInfo", this.id);
+    },
+    computed: {
+        order() {
+            return this.$store.state.order.info;
+        },
+    },
+};
 </script>
 
 <style lang="less" scoped>
@@ -94,6 +108,7 @@ export default {};
         .con {
             margin-top: 0.22rem;
             font-size: 0.27rem;
+            line-height: 0.4rem;
         }
     }
 }

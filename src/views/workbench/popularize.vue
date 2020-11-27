@@ -4,7 +4,7 @@
             <div class="row ac sb">
                 <div>
                     <div class="title">剩余集采分</div>
-                    <div class="point">5476</div>
+                    <div class="point">{{ info.canCarryAmount || 0 }}</div>
                 </div>
                 <div class="btn">我要提现</div>
             </div>
@@ -12,15 +12,15 @@
             <div class="row ac sb info">
                 <div class="row ac">
                     <div class="item">
-                        <div class="title">3049</div>
+                        <div class="title">{{ info.todayProfit || 0 }}</div>
                         <div class="point">今日收益</div>
                     </div>
                     <div class="item">
-                        <div class="title">3049</div>
+                        <div class="title">{{ info.monthProfit || 0 }}</div>
                         <div class="point">本月收益</div>
                     </div>
                     <div class="item">
-                        <div class="title">3049</div>
+                        <div class="title">{{ info.totalProfit || 0 }}</div>
                         <div class="point">总收益</div>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
             >
                 <i class="iconfont icontuandui"></i>
                 <div class="info">
-                    <div class="count">48</div>
+                    <div class="count">{{ info.recommendedUsers || 0 }}</div>
                     <div class="title">推广人数</div>
                 </div>
             </router-link>
@@ -47,7 +47,7 @@
             >
                 <i class="iconfont icondingdan"></i>
                 <div class="info">
-                    <div class="count">8</div>
+                    <div class="count">{{ info.recommendedOrders || 0 }}</div>
                     <div class="title">推广人订单</div>
                 </div>
             </router-link>
@@ -90,21 +90,19 @@ import api from "../../api/user";
 export default {
     data() {
         return {
+            id: this.$store.state.user.userId,
             active: 0,
             tabs: ["全部", "收入", "支出"],
+            info: {},
         };
     },
     created() {
-        this.init();
+        this.getPopularize();
     },
     methods: {
-        async init() {
-            let res = await api.getMemberSourceList({
-                memberId: this.$store.state.user.userId,
-                pageNo: 1,
-                pageSize: 10,
-                sourceType: 1,
-            });
+        async getPopularize() {
+            let res = await api.getPopularize(this.id);
+            this.info = res.result;
         },
     },
     components: {

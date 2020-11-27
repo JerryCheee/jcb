@@ -13,7 +13,10 @@
                     v-if="item.status == 6"
                     :order="item"
                 >
-                    <order-btn type="plain" @click="goEvaluate">
+                    <order-btn
+                        type="plain"
+                        @click="$router.push(`/order/evaluate?id=${item.id}`)"
+                    >
                         去评价
                     </order-btn>
                 </order-card>
@@ -47,7 +50,7 @@
                     <order-btn
                         type="plain"
                         style="margin-right: 0.17rem"
-                        @click="goApplyRefund"
+                        @click="goApplyRefund(item.id)"
                     >
                         申请退款
                     </order-btn>
@@ -64,7 +67,11 @@
                     <order-btn type="plain" style="margin-right: 0.17rem">
                         查看物流
                     </order-btn>
-                    <order-btn type="plain" style="margin-right: 0.17rem">
+                    <order-btn
+                        type="plain"
+                        style="margin-right: 0.17rem"
+                        @click="goApplyRefund(item.id)"
+                    >
                         申请退款
                     </order-btn>
                     <order-btn type="primary">确认收货</order-btn>
@@ -94,10 +101,14 @@
                     v-if="item.status == 7"
                     :order="item"
                 >
-                    <order-btn type="plain" style="margin-right: 0.17rem">
+                    <order-btn
+                        type="plain"
+                        style="margin-right: 0.17rem"
+                        @click="goApplyRefund(item.id)"
+                    >
                         申请退款
                     </order-btn>
-                    <order-btn type="primary" @click="goSelfTake">
+                    <order-btn type="primary" @click="goSelfTake(item.id)">
                         取货码
                     </order-btn>
                 </order-card>
@@ -164,14 +175,11 @@ export default {
             return t.setDate(t.getDate() + 1) - new Date().getTime();
         },
         //下面为订单的各种方法
-        goEvaluate() {
-            this.$router.push({ name: "orderEvaluate" });
+        goSelfTake(id) {
+            this.$router.push("/selfTake?id=" + id);
         },
-        goSelfTake() {
-            this.$router.push({ name: "selfTake" });
-        },
-        goApplyRefund() {
-            this.$router.push({ name: "applyRefund" });
+        goApplyRefund(id) {
+            this.$router.push("/refund/money?id=" + id);
         },
     },
 };

@@ -1,7 +1,11 @@
 <template>
     <div class="wrap">
         <!-- 订单进度步骤条 -->
-        <OrderTop :index="0" />
+        <OrderTop :index="0" v-if="order.status" />
+        <div class="top-des" v-else>
+            <div class="title">已取消</div>
+            <div class="des">取消原因，超时未支付</div>
+        </div>
 
         <!-- 自提地址 -->
         <div class="address-card column sb" v-if="order.selfCarry">
@@ -94,6 +98,17 @@ export default {
             font-size: 0.2rem;
             color: #000000;
         }
+    }
+}
+.top-des {
+    padding: 0.4rem 0;
+    .title {
+        font-size: 0.271rem;
+        font-weight: bold;
+        margin-bottom: 0.15rem;
+    }
+    .des {
+        font-size: 0.215rem;
     }
 }
 </style>
