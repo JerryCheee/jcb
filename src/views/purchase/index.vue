@@ -209,8 +209,8 @@
         <div class="pro-box">
             <tabs v-model="active" swipeable animated line-width="0">
                 <tab
-                    title="新品推荐"
                     v-for="(item, index) in proTabs"
+                    :title="item"
                     :key="index"
                 >
                     <IndexProList :type="active + 1" />

@@ -160,10 +160,10 @@
                         <i class="iconfont iconguanzhu blue"></i>
                         <span>我的收藏</span>
                     </router-link>
-                    <router-link to="/#" tag="div" class="common-item">
+                    <div class="common-item" @click="goBuyer">
                         <i class="iconfont iconqiehuan green"></i>
                         <span>切换买家端</span>
-                    </router-link>
+                    </div>
                     <a
                         class="common-item"
                         href="https://yzf.qq.com/xv/web/static/chat/index.html?sign=37ef9b97817257902417cab84fb5e0669798bef57231e621e0439145d414695d3f39810730d2a498603a9ce6257466b3baaefd77"
@@ -210,6 +210,10 @@ export default {
         wait() {
             Toast("此功能暂未开放！");
         },
+        goBuyer() {
+            location.href = "http://192.168.2.139:8080/#/mine";
+            // location.href = "https://china-jcb.com/wechat/#/mine";
+        },
     },
     components: {
         myFooter,
@@ -219,10 +223,7 @@ export default {
 
 <style lang="less" scoped>
 .mine-wrap {
-    height: 100vh;
     background-color: #f6f6f6;
-    overflow: auto;
-    position: relative;
 }
 .common-card {
     box-sizing: border-box;

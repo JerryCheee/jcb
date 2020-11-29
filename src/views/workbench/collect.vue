@@ -5,7 +5,7 @@
         <list
             v-model="loading"
             :finished="finished"
-            finished-text="没有更多了"
+            :finished-text="emptyText"
             @load="getList"
         >
             <GoodsList :goods_list="list" />
@@ -28,10 +28,12 @@ export default {
         return {
             loading: false,
             finished: false,
+            emptyText: "",
             params: {
                 pageNo: 1,
                 pageSize: 10,
                 type: 1,
+                source: 2,
             },
             list: [],
         };
@@ -67,6 +69,7 @@ export default {
                     Toast("获取商品失败!");
                     return;
                 }
+                if (this.list.length > 0) this.emptyText = "没有更多了";
                 this.params.pageNo++;
             }, 500);
         },

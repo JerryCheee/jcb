@@ -16,21 +16,25 @@ export default {
         };
     },
     async created() {
+        var token = this.$route.query.token;
+        if (token) localStorage.setItem("token-store", token);
         let res = await api.getUserInfo();
         if (res.success) {
-            this.storeId = res.result.memberUserInfoVo.storeId;
+            let isStore = res.result.memberUserInfoVo.isStore;
             this.userId = res.result.memberUserInfoVo.id;
-            if (!this.storeId) {
+            if (!isStore) {
                 Toast("您还没有店铺！");
                 setTimeout(() => {
-                    this.$router.push("/login");
+                    history.back(-1);
                 }, 1500);
                 return;
             }
+            this.storeId = res.result.memberUserInfoVo.storeId;
             this.$store.commit("SET_STOREID", this.storeId);
             this.$store.commit("SET_USERID", this.userId);
             this.isReady = true;
         } else {
+            Toast(res.msg);
             // this.$router.push("/login");
         }
     },

@@ -4,42 +4,49 @@
             <div class="form-item">
                 <div class="form-label">店铺LOGO</div>
                 <div class="form-input">
-                    <img src="../../assets/img/会员中心头像.png" alt class="head" />
+                    <img
+                        src="../../assets/img/会员中心头像.png"
+                        alt
+                        class="head"
+                    />
                 </div>
             </div>
             <div class="form-item">
                 <div class="form-label">店铺名称</div>
                 <div class="form-input">
-                    <input type="text" v-model="info.storeName" />
+                    <input type="text" v-model="info.storeName" readonly />
                 </div>
             </div>
             <div class="form-item">
                 <div class="form-label">联系人</div>
                 <div class="form-input">
-                    <input type="text" value="张三" />
+                    <input type="text" value="张三" readonly />
                 </div>
             </div>
             <div class="form-item column">
                 <div class="form-label">店铺简介</div>
                 <div class="form-textarea">
-                    <textarea placeholder="请输入简介内容" v-model="info.introduce"></textarea>
+                    <textarea
+                        placeholder="请输入简介内容"
+                        v-model="info.introduce"
+                    ></textarea>
                 </div>
             </div>
         </div>
 
-        <div class="submit-btn">保存</div>
+        <div class="submit-btn" @click="save">保存</div>
     </div>
 </template>
 
 <script>
-import { Popup, DatetimePicker } from "vant";
+import { Popup, DatetimePicker, Toast } from "vant";
 import api from "../../api/user";
 
 export default {
     data() {
         return {
             storeId: this.$store.state.user.storeId,
-            info: {}
+            info: {},
         };
     },
     created() {
@@ -49,12 +56,26 @@ export default {
         async getStoreInfo() {
             let res = await api.getStoreInfo({ storeId: this.storeId });
             this.info = res.result || {};
-        }
+        },
+        async save() {
+            let res = await api.editStoreInfo({
+                introduce: this.info.introduce,
+                storeId: this.storeId,
+            });
+            if (res.success) {
+                Toast("保存成功");
+                setTimeout(() => {
+                    this.$router.back();
+                }, 1000);
+            } else {
+                Toast(res.message);
+            }
+        },
     },
     components: {
         Popup,
-        DatetimePicker
-    }
+        DatetimePicker,
+    },
 };
 </script>
 
@@ -100,7 +121,7 @@ export default {
                 border: none;
                 opacity: 0.6;
                 font-size: 0.215rem;
-                color: #a8a8a8;
+                color: #1a1a1a;
                 line-height: 0.271rem;
                 padding: 0.15rem;
                 resize: none;

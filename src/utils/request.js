@@ -12,6 +12,7 @@ request.interceptors.request.use(config => {
 
         // let token = tokenHolder.get()
         let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE2MDU4MzcyOTgsIm9wZW5JZCI6Im9jR1VweEstV3VTdU9GX29jZXJ6RmVTam4wRXciLCJleHAiOjE2MDg0MjkyOTgsInVzZXJJZCI6IjEzMjkzMDQyMTI2NjU0MjE4MjYiLCJpYXQiOjE2MDU4MzcyOTgsImp0aSI6IjEzMjkzMDQyMTI2NjU0MjE4MjYiLCJ1c2VybmFtZSI6IjEzNzk0OTQwMjE2In0.ye82ginSEXaH3i5-EfM2si--D3oSBuR-qADzAZEYT84';
+        // let token = localStorage.getItem('token-store');
         if (token) {
             config.headers['token'] = token
         }

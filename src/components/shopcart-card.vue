@@ -8,7 +8,11 @@
             <span class="spec">{{ goods.prop }}</span>
             <div class="row sb">
                 <span class="price">￥{{ goods.price || 0 }}</span>
-                <stepper :value="goods.count" @change="changeNum" />
+                <stepper
+                    :value="goods.count"
+                    @change="changeNum"
+                    :max="goods.stock"
+                />
             </div>
         </div>
     </div>

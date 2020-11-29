@@ -9,6 +9,7 @@ export default {
     editAddress: data => req.put('/member/address/' + data.id, data),
     deleteAddress: params => req.delete('/member/address/deleteBatch', { params }),
     getStoreInfo: data => req.post('/store/details', data),
+    editStoreInfo: data => req.put('/store/edit', data),
     getStoreCenter: storeId => req.get('/store/getStoreCenter?storeId=' + storeId),
     geographic: params => req.get('/geographic/options', { params }),
     getCollectList: params => req.post('/memberSubApi/listCollectCommodity', params),

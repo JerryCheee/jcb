@@ -115,10 +115,13 @@
 
         <!-- 底部tabbar -->
         <div class="tabbar row sb ac">
-            <div class="column ac jc">
+            <a
+                href="https://yzf.qq.com/xv/web/static/chat/index.html?sign=37ef9b97817257902417cab84fb5e0669798bef57231e621e0439145d414695d3f39810730d2a498603a9ce6257466b3baaefd77"
+                class="column ac jc"
+            >
                 <i class="iconfont iconkefu"></i>
                 <span class="cus">客服</span>
-            </div>
+            </a>
             <div class="row ac">
                 <div class="btn add-shopcart" @click="showSpecPop('add')">
                     加入购物车
@@ -340,7 +343,7 @@ export default {
         async collectIt() {
             //收藏功能
             let { id } = this.$route.query;
-            let res = await api.collect({ commodityId: id });
+            let res = await api.collect({ commodityId: id, source: 2 });
             if (res.success) {
                 Toast(res.result);
                 this.isCollect = !this.isCollect;

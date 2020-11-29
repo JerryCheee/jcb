@@ -131,7 +131,7 @@
                     <div class="sku">{{ v.propertyName }}</div>
                     <div class="footer row sb ac">
                         <span class="price">￥{{ v.skuPrice }}</span>
-                        <Stepper v-model="v.number" />
+                        <Stepper v-model="v.number" :max="v.stock" />
                     </div>
                 </div>
             </div>
