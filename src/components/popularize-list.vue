@@ -37,7 +37,6 @@ export default {
         clearTimeout(timer);
         let res = await api.getPrifitList(this.params);
         this.loading = false;
-        console.log(res)
         if (!res.success || !res.result || res.result.records.length == 0) {
           this.finished = true;
         } else {

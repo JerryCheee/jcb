@@ -56,10 +56,10 @@
                     <i class="iconfont iconARROW"></i>
                 </router-link>-->
 
-                <div class="filed-item" @click="pops.serverInfo = true">
+                <div class="filed-item" @click="pops.serverInfo = true" v-if="server.length>0">
                     <div>
                         <span class="r38">服务</span>
-                        <span>退货包运费·极速退款·7天无理由退货</span>
+                        <span>{{server.slice(0,3).map(v=>v.content.title).join(' · ')}}</span>
                     </div>
                     <i class="iconfont iconARROW"></i>
                 </div>
@@ -313,6 +313,15 @@ export default {
             sku_obj: {}, // 筛选出来的obj 展示用
             sku_selected: "", //已选中的规格
             pop_type: "add", //判断是添加购物车还是购买  add购物车  buy购买
+            //服务
+            serveList:[ // 服务对应数组对象
+            {key:'isReturn', content:{title:'七天无理由退换', desc:'满足相应条件时，消费者可申请7天无理由退款'}},
+            {key:'isCompensation', content:{title:'假一赔十', desc:'若收到的商品是假冒商品，可获得十倍现金券赔偿'}},
+            {key:'isDelivery', content:{title:'48小时发货', desc:'付款后，48小时内发货'}},
+            {key:'isRefund', content:{title:'急速退款', desc:'下单4小时内，未发货状态下，提交退款申请立即退款'}},
+            //缺少同城送货字段
+            ],
+            server:[], //筛选出来的服务数组
         };
     },
     watch: {
@@ -337,6 +346,10 @@ export default {
             this.takeDay = (res.result.deliveryDate || "").split("-");
             // 给规格展示一个默认值
             this.sku_obj = this.pageInfo.productSkuVos[0];
+                //筛选店铺服务
+            let o = this.pageInfo.productShelveService
+            let enServe = Object.keys(o).filter(v=>o[v]>0)
+            this.server = this.serveList.filter(v=>enServe.includes(v.key))
             this.num = this.pageInfo.clap;
             window.scroll(0, 0);
         },

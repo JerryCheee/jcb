@@ -62,8 +62,8 @@ export default {
                     list = list.map((v) => {
                         return {
                             productId: v.commodityId,
-                            productName: v.commodityName,
-                            purchasePrice: v.paymentPrice,
+                            productName: v.productName,
+                            purchasePrice: v.purchasePrice,
                             saleCount: v.saleCount,
                             pic: v.pic,
                         };
