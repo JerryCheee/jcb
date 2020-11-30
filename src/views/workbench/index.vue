@@ -99,7 +99,7 @@
                 <span class="title">推广中心</span>
                 <div class="common-wrap">
                     <div class="info-item">
-                        <span>0</span>
+                        <span>{{ storeInfo.jicaifen || 0 }}</span>
                         <div>集采分</div>
                     </div>
                     <div class="info-item">
