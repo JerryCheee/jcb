@@ -13,6 +13,8 @@ export default {
     getStoreCenter: storeId => req.get('/store/getStoreCenter?storeId=' + storeId),
     geographic: params => req.get('/geographic/options', { params }),
     getCollectList: params => req.post('/memberSubApi/listCollectCommodity', params),
-    getMemberSourceList: (params) => req.get('/popularize/memberSourceList', { params }),
+    getMemberSourceList: (params) => req.get('/popularize/memberSourceList', { params }), // 推广人列表
+    getOrderSourceList: (params) => req.get('/popularize/orderSourceList', { params }), // 推广订单列表
     getPopularize: id => req.get('/popularize/statistics?memberId=' + id),
+    getPrifitList: params => req.get('/popularize/amountList', { params }), // 推广收益列表
 }

@@ -441,7 +441,7 @@ import {
 import api from "../../api/order";
 import userApi from "../../api/user";
 import html2canvas from "html2canvas";
-import wxFn from "../../utils/wxFn";
+import {invokeWxPay} from "../../utils/wxFn";
 export default {
     data() {
         return {
@@ -477,8 +477,8 @@ export default {
         };
     },
     created() {
-        this.getTimeList();
         this.getOrderInfo();
+        
         //判断url 来决定调用什么方式来获取地址
         let { addressId } = this.$route.query || "";
         addressId ? this.getAddress() : this.getAddressList();
@@ -487,6 +487,8 @@ export default {
         async getOrderInfo() {
             let res = await api.getOrderInfo(this.orderno);
             this.orderInfo = res.result;
+            this.contact = this.orderInfo[0].phone
+            this.getTimeList();
         },
         getMonthDay() {
             // let date = new Date()
@@ -514,6 +516,8 @@ export default {
             this.editPhone = true;
         },
         checkPhone(e) {
+            let phone = /^1[0-9]{10}$/.test(this.contact)
+            if(!phone) return Toast('手机号无效！')
             this.editPhone = false;
         },
         shopHandle(i) {
@@ -591,7 +595,7 @@ export default {
                 if (this.payType == 2) {
                     this.showEwm = true;
                 } else {
-                    wxFn.invokeWxPay({
+                    invokeWxPay({
                         ...res.result,
                         success: (e) => {
                             console.log(e);
@@ -612,9 +616,19 @@ export default {
             }
         },
         getTimeList() {
-            let openHours = "2020-11-22 08:30:00";
-            let closeHours = "2020-11-22 18:30:00";
-
+            let [openHours, closeHours] = ['', '']
+            if(this.orderInfo.length>1){
+                openHours = "2020/11/22 08:30:00";
+                closeHours = "2020/11/22 18:30:00";
+            }else{
+                openHours = this.orderInfo[0].getApiVo.openHours||''
+                closeHours = this.orderInfo[0].getApiVo.closeHours||''
+                openHours = '2018/09/01 ' + (openHours||'09:00:00')
+                closeHours = '2018/09/01 ' + (closeHours||'17:00:00')
+            }
+            // let {openHours, closeHours} = this.orderInfo.getApiVo
+            // openHours = '2018/09/01 ' + (openHours||'09:00:00')
+            // closeHours = '2018/09/01 ' + (closeHours||'17:00:00')
             let [min, max] = [openHours, closeHours].map(
                 (v) => new Date(v) * 1
             );

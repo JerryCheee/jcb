@@ -54,9 +54,14 @@ export default {
                     this.finished = true;
                 } else {
                     var list = res.result.lists;
+                    // list = list.map(v=>{
+                    //     v.productId = v.commodityId
+                    //     // v.commodityId = v.productId
+                    //     return v
+                    // })
                     list = list.map((v) => {
                         return {
-                            productId: v.id,
+                            productId: v.commodityId,
                             productName: v.commodityName,
                             purchasePrice: v.paymentPrice,
                             saleCount: v.saleCount,

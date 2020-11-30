@@ -2,7 +2,7 @@
     <div class="page">
         <div class="top">
             <div class="title">推广人数</div>
-            <div class="count">48</div>
+            <div class="count">{{$route.query.num}}</div>
         </div>
 
         <div class="tabs-list">
