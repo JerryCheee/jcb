@@ -1,8 +1,11 @@
 <template>
     <div class="wrap">
         <!-- 订单进度步骤条 -->
-        <OrderTop :index="0" v-if="order.status" />
-        <div class="top-des" v-else>
+        <div class="top-des" v-if="order.status==5">
+            <div class="title">退款中</div>
+        </div>
+        <OrderTop :index="0" v-if="order.status&&order.status!=5" />
+        <div class="top-des" v-if="order.status==0">
             <div class="title">已取消</div>
             <div class="des">取消原因，超时未支付</div>
         </div>

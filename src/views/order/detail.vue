@@ -4,7 +4,7 @@
             v-if="order.status == 1 && order.paymentMethods != 4"
             :order="order"
         />
-        <OrderReceive v-if="order.status == 3" :order="order" />
+        <OrderReceive v-if="order.status == 3 || order.status == 7" :order="order" />
         <OrderConsignment v-if="order.status == 2" :order="order" />
         <OrderRefund v-if="order.status == 5" :order="order" />
         <OrderCertificate

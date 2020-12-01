@@ -29,14 +29,14 @@
     </div>
 
     <div class="nav">
-      <router-link tag="div" to="/workbench/popularize-people" class="nav-item">
+      <router-link tag="div" :to="'/workbench/popularize-people?num='+info.recommendedUsers" class="nav-item">
         <i class="iconfont icontuandui"></i>
         <div class="info">
           <div class="count">{{ info.recommendedUsers || 0 }}</div>
           <div class="title">推广人数</div>
         </div>
       </router-link>
-      <router-link tag="div" to="/workbench/popularize-order" class="nav-item">
+      <router-link tag="div" :to="'/workbench/popularize-order'+info.recommendedOrders" class="nav-item">
         <i class="iconfont icondingdan"></i>
         <div class="info">
           <div class="count">{{ info.recommendedOrders || 0 }}</div>

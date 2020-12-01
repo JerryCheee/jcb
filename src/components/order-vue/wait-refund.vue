@@ -1,14 +1,14 @@
 <template>
     <div class="wait-consignment-wrap">
-        <top-header status="退款中">
-            <span
+        <top-header status="退款中" :order="order">
+            <!-- <span
                 >等待商家确认，剩余
                 <count-down
                     endTime="2020/11/12"
                     crowd
                     colonColor="#fff"
                 ></count-down
-            ></span>
+            ></span> -->
         </top-header>
 
         <div class="content">
@@ -30,8 +30,11 @@ import OrderBtn from "../order/order-btn";
 import { CountDown, Dialog } from "vant";
 export default {
     data() {
-        return {};
+        return {
+            
+        };
     },
+    props:['order'],
     methods: {
         cancelRefund() {
             Dialog.confirm({

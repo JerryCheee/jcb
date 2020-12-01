@@ -89,6 +89,8 @@ export default {
             if (res.result.total == 0) {
                 this.isEmpty = true;
                 return;
+            }else{
+                this.isEmpty = false
             }
             this.addressList = res.result.records;
             this.defaultIdx = this.addressList.findIndex(
@@ -96,6 +98,8 @@ export default {
             );
             if (this.addressList.length > 3) {
                 this.positionBtn = false;
+            }else{
+                this.positionBtn = true
             }
         },
         async setDefault(i, value) {

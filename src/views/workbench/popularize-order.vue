@@ -2,7 +2,7 @@
   <div class="page">
     <div class="top">
       <div class="title">推广人订单</div>
-      <div class="count">48</div>
+      <div class="count">{{$route.query.num||0}}</div>
     </div>
 
     <div class="tabs-list">

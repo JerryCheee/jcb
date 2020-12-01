@@ -11,6 +11,6 @@ export default {
     createOrder: data => req.post('/order', data),
     getAllBrand: params => req.get('/productBrand/list', { params }),
     getSupHomeList: data => req.post('/productInfo/supHomeList', data),
-    collect: params => req.get('/memberSubApi/collectionCommodity', { params })
-
+    collect: params => req.get('/memberSubApi/collectionCommodity', { params }),
+    getSecBrand: params => req.get('/productBrand/tags', { params })
 }

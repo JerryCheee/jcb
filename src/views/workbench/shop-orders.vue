@@ -35,7 +35,7 @@ export default {
             tabs: [
                 { name: "", title: "全部" },
                 { name: "1", title: "待支付" },
-                { name: "2", title: "待收货" },
+                { name: "2", title: "待发货" },
                 { name: "6", title: "已完成" },
                 { name: "5", title: "退货售后" },
             ],
