@@ -79,6 +79,7 @@ export default {
     async index(n){
       //监听品牌选中变化 获取品牌下的下级标签
       this.checkChildIds = []
+      if(n==-1) return
       let id = this.info[n].id
       let res = await api.getSecBrand({id})
       this.child = res.result

@@ -1,5 +1,6 @@
 <template>
     <div class="order-wrap">
+
         <tabs
             v-model="tabIdx"
             line-width="0.452rem"
@@ -24,6 +25,7 @@
 <script>
 import { Tab, Tabs } from "vant";
 import OrderList from "../../components/order/order-list";
+import payPop from '../../components/pay-pop'
 export default {
     data() {
         return {
@@ -45,6 +47,7 @@ export default {
         Tab,
         Tabs,
         OrderList,
+        payPop
     },
 };
 </script>

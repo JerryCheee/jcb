@@ -14,8 +14,8 @@
             <div class="name">{{ pageInfo.name }}</div>
             <div class="row sb ac" style="margin: 0.15rem 0 0.08rem 0">
                 <div class="row" style="align-items: flex-end">
-                    <span class="now">￥{{ pageInfo.purchasePrice }}</span>
-                    <span class="old">￥{{ pageInfo.advicePrice }}</span>
+                    <span class="now">￥{{ Number(pageInfo.purchasePrice).toFixed(2) }}</span>
+                    <span class="old">￥{{ Number(pageInfo.advicePrice).toFixed(2) }}</span>
                 </div>
                 <div @click="collectIt">
                     <i class="iconfont iconguanzhu2" v-if="isCollect"></i>
@@ -168,20 +168,20 @@
         </action-sheet>
         <action-sheet v-model="pops.serverInfo" title="服务说明">
             <div class="pop-content server-content">
-                <div>
-                    <span class="s-title">退货包运费</span>
+                <div v-for="item in server" :key="item.key">
+                    <span class="s-title">{{item.content.title}}</span>
                     <p>
-                        订单发货后90天内如果申请退货退款或换货，平台将免除退货运费
+                        {{item.content.desc}}
                     </p>
                 </div>
-                <div>
+                <!-- <div>
                     <span class="s-title">极速退款</span>
                     <p>下单4小时内，未发货状态下，提交退款申请立即退款</p>
                 </div>
                 <div>
                     <span class="s-title">7天无理由退款</span>
                     <p>满足相应条件时，消费者可申请7天无理由退</p>
-                </div>
+                </div> -->
                 <div
                     class="pop-close-btn position"
                     @click="pops.serverInfo = false"

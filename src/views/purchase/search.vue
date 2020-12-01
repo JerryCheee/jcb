@@ -181,9 +181,11 @@ export default {
     search() {
       this.hasData = true;
       this.goodsParams.keyword = this.searchText;
-      this.setHistory(this.searchText);
+      this.goodsParams.pageNo = 1
+      // this.setHistory(this.searchText);
       this.goodsList = [];
-      this.$refs.waterFall.refresh();
+      // this.$refs.waterFall.refresh();
+      this.onLoad()
     },
     //点击历史搜索
     historySearch(value) {

@@ -12,9 +12,9 @@
             <div class="info">
                 <div class="price">
                     <span class="new" v-if="item.purchasePrice"
-                        >￥{{ item.purchasePrice.toFixed(2) }}</span
+                        >￥{{ Number(item.purchasePrice).toFixed(2) }}</span
                     >
-                    <!-- <span class="old">￥{{ item.advicePrice }}</span> -->
+                    <span class="old">￥{{ item.advicePrice }}</span>
                 </div>
                 <div class="count">销量:{{ item.saleCount }}</div>
             </div>

@@ -155,7 +155,7 @@ export default {
     },
     methods: {
         getTime(time) {
-            var t = new Date(time);
+            var t = new Date(time.replace(/-/g, '/'));
             return t.setDate(t.getDate() + 1) - new Date().getTime();
         },
         async init() {

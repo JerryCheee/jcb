@@ -11,7 +11,7 @@
                 <count-down :time="getTime(order.commitTime)"></count-down>
             </div>
             <order-btn type="plain" @click="cancel">取消订单</order-btn>
-            <order-btn type="primary">立即支付</order-btn>
+            <order-btn type="primary" @click="pay">立即支付</order-btn>
         </div>
     </div>
 </template>
@@ -22,6 +22,7 @@ import goodsInfo from "../order/goods-info";
 import otherInfo from "../order/other-info";
 import orderBtn from "../order/order-btn";
 import { CountDown, Dialog, Toast } from "vant";
+import {invokeWxPay} from '../../utils/wxFn'
 import api from "../../api/order";
 export default {
     props: ["order"],
@@ -30,7 +31,7 @@ export default {
     },
     methods: {
         getTime(time) {
-            var t = new Date(time);
+            var t = new Date(time.replace(/-/g, '/'));
             return t.setDate(t.getDate() + 1) - new Date().getTime();
         },
         //取消订单
@@ -42,7 +43,8 @@ export default {
                 .then(async () => {
                     // on confirm
                     let res = await api.cancelOrder(this.order.id);
-                    if (res.successs) {
+                    if (res.success) {
+                        this.$router.replace({path:'/order'})
                         return Toast("订单取消成功！");
                     } else {
                         return Toast("订单取消失败！");
@@ -52,6 +54,21 @@ export default {
                     // on cancel
                 });
         },
+        async pay(){
+            let res = await api.payOrder(this.order.orderCode)
+            invokeWxPay({
+                ...res.result,
+                success:res=>{
+                this.showToast('支付成功!')
+                this.$router.replace({path:'/order'})
+            }, 
+            fail:err=>{
+                Dialog.alert({
+                message: '支付失败',
+                })
+            }
+            })
+                }
     },
     components: {
         topHeader,

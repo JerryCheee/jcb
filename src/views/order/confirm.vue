@@ -262,8 +262,10 @@
             <div class="buy-btn row ac jc" @click="pay">立即购买</div>
         </div>
 
-        <div class="pop-ewm" v-if="showEwm">
-            <div class="box" id="save-code">
+        <pay-pop v-if="showEwm" @closePay="closePay"></pay-pop>
+        <!-- <div class="pop-ewm" v-if="showEwm">
+            <img :src="canvasImg" alt="" v-if="canvasImg">
+            <div class="box" id="save-code" v-else>
                 <i class="iconfont iconguanbi2" @click="goOrderDetail"></i>
                 <div class="title">
                     <span>支付金额：</span
@@ -285,7 +287,7 @@
                 </div>
             </div>
             <div class="btn" @click="saveImg">保存支付码</div>
-        </div>
+        </div> -->
 
         <!-- 又是一堆弹框 x_x -->
         <action-sheet v-model="pops.takeTime" title="选择自提时间">
@@ -442,6 +444,7 @@ import api from "../../api/order";
 import userApi from "../../api/user";
 import html2canvas from "html2canvas";
 import {invokeWxPay} from "../../utils/wxFn";
+import payPop from "../../components/pay-pop"
 export default {
     data() {
         return {
@@ -474,6 +477,7 @@ export default {
             },
             payType: 1,
             account_index: -1, //线下支付账户索引
+            canvasImg:''
         };
     },
     created() {
@@ -650,48 +654,53 @@ export default {
             } ${this.options[this.opIdx]}:00`;
             return timeStr;
         },
-        saveImg() {
-            // HTML转canvas
-            html2canvas(document.querySelector("#save-code"), {
-                useCORS: true,
-            }).then((canvas) => {
-                // $("#save-code").css("display", "none"); // 隐藏目标HTML页面
-                this.convertCanvasToImg(canvas); // canvas转图片
-            });
-        },
-        convertCanvasToImg(canvas) {
-            // canvas转base64 转 blob
-            var myBlob = this.dataURLtoBlob(canvas.toDataURL("img/png", 0.92));
-            //blob转URL对象
-            var myUrl = URL.createObjectURL(myBlob);
-            // 创建a标签，下载图片
-            this.downImg(myUrl);
-        },
-        dataURLtoBlob(dataurl) {
-            var arr = dataurl.split(","),
-                mime = arr[0].match(/:(.*?);/)[1],
-                bstr = atob(arr[1]),
-                n = bstr.length,
-                u8arr = new Uint8Array(n);
-            while (n--) {
-                u8arr[n] = bstr.charCodeAt(n);
-            }
-            return new Blob([u8arr], { type: mime });
-        },
-        downImg(url) {
-            // 创建a标签 并设置其相关属性，最后触发其点击事件
-            let a = document.createElement("a");
-            let clickEvent = document.createEvent("MouseEvents");
-            a.setAttribute("href", url);
-            a.setAttribute("download", "codeImg");
-            a.setAttribute("target", "_blank");
-            clickEvent.initEvent("click", true, true);
-            a.dispatchEvent(clickEvent);
-        },
-        goOrderDetail() {
-            this.showEwm = false;
-            this.$router.replace("/order");
-        },
+        // saveImg() {
+        //     // HTML转canvas
+        //     html2canvas(document.querySelector("#save-code"), {
+        //         useCORS: true,
+        //     }).then((canvas) => {
+        //         //$("#save-code").css("display", "none"); // 隐藏目标HTML页面
+        //         // document.querySelector("#save-code").style.display = 'none'
+        //         this.convertCanvasToImg(canvas); // canvas转图片
+        //     });
+        // },
+        // convertCanvasToImg(canvas) {
+        //     // canvas转base64 转 blob
+        //     var myBlob = this.dataURLtoBlob(canvas.toDataURL("img/png", 0.92));
+        //     //blob转URL对象
+        //     var myUrl = URL.createObjectURL(myBlob);
+        //     this.canvasImg = myUrl
+        //     // 创建a标签，下载图片
+        //     // this.downImg(myUrl);
+        // },
+        // dataURLtoBlob(dataurl) {
+        //     var arr = dataurl.split(","),
+        //         mime = arr[0].match(/:(.*?);/)[1],
+        //         bstr = atob(arr[1]),
+        //         n = bstr.length,
+        //         u8arr = new Uint8Array(n);
+        //     while (n--) {
+        //         u8arr[n] = bstr.charCodeAt(n);
+        //     }
+        //     return new Blob([u8arr], { type: mime });
+        // },
+        // downImg(url) {
+        //     // 创建a标签 并设置其相关属性，最后触发其点击事件
+        //     let a = document.createElement("a");
+        //     let clickEvent = document.createEvent("MouseEvents");
+        //     a.setAttribute("href", url);
+        //     a.setAttribute("download", "codeImg");
+        //     a.setAttribute("target", "_blank");
+        //     clickEvent.initEvent("click", true, true);
+        //     a.dispatchEvent(clickEvent);
+        // },
+        // goOrderDetail() {
+        //     this.showEwm = false;
+        //     this.$router.replace("/order");
+        // },
+        closePay(){
+            this.showEwm = false
+        }
     },
     mounted() {
         this.getMonthDay();
@@ -713,6 +722,7 @@ export default {
         Radio,
         Cell,
         CellGroup,
+        payPop
     },
 };
 </script>

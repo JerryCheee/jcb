@@ -2,7 +2,7 @@
     <router-view v-if="isReady"></router-view>
 </template>
 <script>
-// import { initWxConfig } from "./utils/wxFn.js";
+import { initWxConfig } from "./utils/wxFn.js";
 import { mapActions } from "vuex";
 import { isDeep, listenrPath, iosPositionIssue } from "./utils/iosOnly";
 import api from "./api/user";
@@ -57,6 +57,9 @@ export default {
         },
     },
     name: "App",
+    created(){
+        initWxConfig()
+    }
 };
 </script>
 
