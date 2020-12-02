@@ -214,8 +214,8 @@ export default {
             Toast("此功能暂未开放！");
         },
         goBuyer() {
-            // location.href = "http://192.168.2.139:8080/#/mine";
-            location.href = "https://china-jcb.com/wechat/#/mine";
+            location.href = "http://192.168.2.139:8080/#/mine";
+            // location.href = "https://china-jcb.com/wechat/#/mine";
         },
     },
     components: {
