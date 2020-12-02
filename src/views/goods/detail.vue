@@ -14,8 +14,8 @@
             <div class="name">{{ pageInfo.name }}</div>
             <div class="row sb ac" style="margin: 0.15rem 0 0.08rem 0">
                 <div class="row" style="align-items: flex-end">
-                    <span class="now">￥{{ Number(pageInfo.purchasePrice).toFixed(2) }}</span>
-                    <span class="old">￥{{ Number(pageInfo.advicePrice).toFixed(2) }}</span>
+                    <span class="now">￥{{ pageInfo.purchasePrice|priceF }}</span>
+                    <span class="old">￥{{ pageInfo.advicePrice|priceF }}</span>
                 </div>
                 <div @click="collectIt">
                     <i class="iconfont iconguanzhu2" v-if="isCollect"></i>
@@ -122,6 +122,10 @@
                 <i class="iconfont iconkefu"></i>
                 <span class="cus">客服</span>
             </a>
+            <router-link to="/workbench" tag="div" class="column ac jc sb">
+                <i class="iconfont icongongzuotai" style="font-size:0.33rem"></i>
+                <span class="cus">工作台</span>
+            </router-link>
             <div class="row ac">
                 <div class="btn add-shopcart" @click="showSpecPop('add')">
                     加入购物车
@@ -216,7 +220,7 @@
             <div class="shopcart-content column">
                 <!-- 顶部信息栏 -->
                 <div class="top row">
-                    <img :src="sku_obj.preview" alt />
+                    <img :src="sku_obj.preview" alt  @click="previewImg(sku_obj.preview)"/>
                     <div class="column sb">
                         <div class="row price-wrap">
                             <span class="symbol">￥</span>
@@ -284,7 +288,7 @@
 </template>
 
 <script>
-import { Swipe, SwipeItem, ActionSheet, Stepper, Toast } from "vant";
+import { Swipe, SwipeItem, ActionSheet, Stepper, Toast, ImagePreview } from "vant";
 import RecommendGoods from "../../components/recommend-goods";
 import EvaluateCard from "../../components/evaluate-card";
 import api from "../../api/product";
@@ -447,6 +451,18 @@ export default {
                 return false;
             return !this.sku_list.some((v) => !v);
         },
+        previewImg(url){
+            ImagePreview([url])
+        }
+    },
+    filters:{
+        priceF(value){
+            let f = (value||'').includes('~')
+            if(f){
+                return value.split('~').map(v=>Number(v).toFixed(2)).join('~')
+            }
+            return Number(value).toFixed(2)
+        }
     },
     components: {
         Swipe,
@@ -455,6 +471,7 @@ export default {
         Stepper,
         RecommendGoods,
         EvaluateCard,
+        ImagePreview
     },
 };
 </script>

@@ -14,7 +14,10 @@
                 <div class="row">
                     <img :src="storeInfo.head" alt />
                     <div class="user-info column sb">
-                        <span class="name">{{ storeInfo.name }}</span>
+                        <div class="name row ac">
+                            <span>{{ storeInfo.name }}</span>
+                            <div class="type row ac jc">{{storeInfo.levelName}}</div>
+                        </div>
                         <div class="desc">{{ storeInfo.introduce }}</div>
                     </div>
                 </div>
@@ -326,6 +329,21 @@ export default {
             margin-left: 0.18rem;
             .name {
                 font-size: 0.271rem;
+                position: relative;
+                display: block;
+                // width: 100vw;
+                .type{
+                    display: inline-block;
+                    width: 0.79rem;
+                    height: 0.23rem;
+                    background-color: #007f41;
+                    border-radius: 0.11rem;
+                    font-size: 0.18rem;
+                    color: #ffffff;
+                    text-align: center;
+                    line-height: 0.23rem;
+                    margin-left: 0.07rem;
+                }
             }
             .desc {
                 width: 2.9rem;

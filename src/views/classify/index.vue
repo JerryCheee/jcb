@@ -101,9 +101,9 @@
               <div class="right-info column sb">
                 <span class="name e2">{{ item.productName }}</span>
                 <div class="price row">
-                  <div class="now">￥{{ item.purchasePrice }}</div>
+                  <div class="now">￥{{ Number(item.purchasePrice).toFixed(2) }}</div>
                   <div class="old" v-if="item.advicePrice">
-                    ￥{{ item.advicePrice || 0 }}
+                    ￥{{ Number(item.advicePrice).toFixed(2) || 0 }}
                   </div>
                 </div>
               </div>

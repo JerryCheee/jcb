@@ -607,11 +607,13 @@ export default {
                         },
                         cancel: (e) => {
                             console.log(e);
-                            Toast(e);
+                            Toast('取消支付');
+                            this.$router.replace("/order");
                         },
                         fail: (e) => {
                             console.log(e);
-                            Toast(e);
+                            Toast('支付失败');
+                            this.$router.replace("/order");
                         },
                     });
                 }

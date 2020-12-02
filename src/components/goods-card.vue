@@ -14,7 +14,7 @@
                     <span class="new" v-if="item.purchasePrice"
                         >￥{{ Number(item.purchasePrice).toFixed(2) }}</span
                     >
-                    <span class="old">￥{{ item.advicePrice }}</span>
+                    <span class="old" v-if="item.advicePrice>0">￥{{ Number(item.advicePrice).toFixed(2) }}</span>
                 </div>
                 <div class="count">销量:{{ item.saleCount }}</div>
             </div>
