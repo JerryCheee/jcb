@@ -35,7 +35,7 @@
                         class="btn row ac jc edit"
                         >编辑</router-link
                     >
-                    <div class="btn row ac jc" @click.stop="deladdress(item)">
+                    <div class="btn row ac jc" @click.stop="deladdress(item, i)">
                         删除
                     </div>
                 </div>
@@ -56,7 +56,7 @@
 
 <script>
 import api from "../../api/user";
-import { Empty } from "vant";
+import { Empty, Toast } from "vant";
 import tokenHolder from "../../utils/tokenHolder";
 export default {
     data() {
@@ -111,14 +111,15 @@ export default {
             if (res.success) {
                 this.defaultIdx = i;
             } else {
-                this.showToast("设置默认地址失败!", 2000);
+                Toast("设置默认地址失败!", 2000);
             }
         },
-        async deladdress(value) {
+        async deladdress(value, i) {
             let res = await api.deleteAddress({ ids: value.id });
             if (res.success) {
-                this.showToast("删除成功!");
-                this.getAddressList();
+                Toast("删除成功!");
+                this.addressList.splice(i, 1)
+                this.getAddressList()
             }
         },
     },

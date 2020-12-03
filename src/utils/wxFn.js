@@ -9,8 +9,9 @@ const domain = location.origin; //用于分享
 
 const firstUrl = location.href.split('#')[0]
 const GetWXConfig = () => request.get(`/login/${webConfig.appid}/getJsapiSignature`, { params: { url: encodeURIComponent(firstUrl) } })
-const defaultShare = { targetUrl: '', imgUrl: webConfig.domain + '/upload/image/202091178562234.png', title: '城大陆和学院', desc: '城大陆和学院师资的培训经历是包括国家认可的相关证书、城大陆和学院培训合格证书。' }
-    /** 注入微信配置 */
+const defaultShare = { targetUrl: '', imgUrl: 'https://jincaibao.oss-accelerate.aliyuncs.com/upload/logo_1606871593545.png', title: '金材宝集采商城', desc: '广东金材宝集采有限公司是一家集五金和建材为一体的全国加盟连锁公司，全新的互联网+建材五金产业模式' }
+
+/** 注入微信配置 */
 export const initWxConfig = async function(entity) {
     let res = await GetWXConfig()
     if (!res.success) return console.error(res.msg)

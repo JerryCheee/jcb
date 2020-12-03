@@ -1,6 +1,6 @@
 <template>
     <div class="mall-wrap">
-        <search-top />
+        <search-top :address="false"/>
 
         <div class="top-box">
             <!-- 轮播图 -->

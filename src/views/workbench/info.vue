@@ -20,7 +20,7 @@
             <div class="form-item">
                 <div class="form-label">联系人</div>
                 <div class="form-input">
-                    <input type="text" value="张三" readonly />
+                    <input type="text" :value="info.person" readonly />
                 </div>
             </div>
             <div class="form-item column">
@@ -34,7 +34,8 @@
             </div>
         </div>
 
-        <div class="submit-btn" @click="save">保存</div>
+        <!-- <div class="submit-btn" @click="save">保存</div> -->
+        <div class="submit-btn" @click="$router.go(-1)">返回</div>
     </div>
 </template>
 
