@@ -46,7 +46,7 @@
             <img :src="item.productPic" alt="" />
             <div class="right column sb">
                 <div class="column">
-                    <span class="name">
+                    <span class="name e2">
                         {{ item.productName }}
                     </span>
                     <span class="sku">
